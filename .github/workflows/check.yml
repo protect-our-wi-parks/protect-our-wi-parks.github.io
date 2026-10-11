@@ -1,0 +1,88 @@
+# The robot checker.
+# Every time someone saves a change on GitHub, a robot computer checks our files for mistakes.
+# ✅ green check = all good.  ❌ red X = something is broken: click it to see what to fix.
+# It only checks. It never changes our files.
+
+name: Check the app
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Get our files
+        uses: actions/checkout@v7
+
+      - name: Check app.js for typos
+        run: node --check app.js
+
+      - name: Check plant-helper.js for typos
+        run: node --check --input-type=module < plant-helper.js
+
+      - name: Check the plant list, the samples, and that no secret key was pasted in
+        run: |
+          node <<'EOF'
+          const fs = require("fs");
+          let problems = 0;
+
+          // Print a problem in plain words, pointing at the file to fix.
+          function problem(file, words) {
+            console.log(`::error file=${file}::${words}`);
+            problems++;
+          }
+
+          // Read a JSON file. If a comma or quote is missing, say so.
+          function readJson(file) {
+            try {
+              return JSON.parse(fs.readFileSync(file, "utf8"));
+            } catch (error) {
+              problem(file, `This file is broken (often a missing comma or quote). Details: ${error.message}`);
+              return null;
+            }
+          }
+
+          // The plant list: every plant needs all its parts.
+          const list = readJson("invasive-plants.json");
+          const seen = new Set();
+          const categories = ["prohibited", "restricted", "depends-on-county"];
+          for (const plant of (list && list.plants) || []) {
+            const name = plant.commonName || plant.scientificName || "a plant";
+            if (!plant.scientificName || !plant.scientificName.includes(" ")) problem("invasive-plants.json", `${name}: scientificName needs two words, like "Alliaria petiolata".`);
+            if (!Array.isArray(plant.otherNames)) problem("invasive-plants.json", `${name}: otherNames must be a list, like [] or ["Old name"].`);
+            if (!plant.commonName) problem("invasive-plants.json", `${name}: commonName is missing.`);
+            if (!categories.includes(plant.category)) problem("invasive-plants.json", `${name}: category must be one of: ${categories.join(", ")}.`);
+            if (!plant.why) problem("invasive-plants.json", `${name}: "why" (one sentence) is missing.`);
+            if (!/^https:\/\/dnr\.wisconsin\.gov\/topic\/Invasives\/fact\/[A-Za-z]+$/.test(plant.dnrPage || "")) problem("invasive-plants.json", `${name}: dnrPage should look like https://dnr.wisconsin.gov/topic/Invasives/fact/PlantName`);
+            for (const n of [plant.scientificName, ...(plant.otherNames || [])]) {
+              const key = String(n).toLowerCase();
+              if (seen.has(key)) problem("invasive-plants.json", `${n} is listed twice.`);
+              seen.add(key);
+            }
+          }
+          if (list) console.log(`Checked ${list.plants.length} plants.`);
+
+          // The samples: every sample needs a photo that really exists.
+          const samples = readJson("samples/results.json");
+          for (const s of (samples && samples.samples) || []) {
+            const name = s.name || "a sample";
+            if (!s.photo || !fs.existsSync("samples/" + s.photo)) problem("samples/results.json", `${name}: the photo "samples/${s.photo}" is missing.`);
+            if (!s.location || typeof s.location.lat !== "number" || typeof s.location.lon !== "number") problem("samples/results.json", `${name}: location needs numbers for lat and lon.`);
+            if (!Array.isArray(s.guesses) || s.guesses.length === 0) problem("samples/results.json", `${name}: guesses must be a list with at least one guess.`);
+            if (!s.credit) problem("samples/results.json", `${name}: credit (who took the photo) is missing.`);
+          }
+          if (samples) console.log(`Checked ${samples.samples.length} samples.`);
+
+          // Safety: a Pl@ntNet key must never be in our public code. It belongs only in Cloudflare.
+          for (const file of ["app.js", "index.html", "style.css", "plant-helper.js", "invasive-plants.json", "samples/results.json", "README.md", "EXPLAIN.md"]) {
+            if (/2b10[A-Za-z0-9]{18,}/.test(fs.readFileSync(file, "utf8"))) problem(file, "This looks like a Pl@ntNet key! Remove it right away and tell an adult to make a new key. Keys only go in Cloudflare.");
+          }
+
+          if (problems) {
+            console.log(`❌ Found ${problems} problem(s). Fix them and save again.`);
+            process.exit(1);
+          }
+          console.log("✅ Everything looks good!");
+          EOF

@@ -31,6 +31,32 @@ The Pl@ntNet key is stored **only** in Cloudflare, as the `PLANTNET_KEY` secret 
 
 The **ℹ️** button (top right) opens the **About** box: how to use the app, why the AI can be wrong, staying safe, where photos and locations go, and all sources and photo credits.
 
+## Making changes on GitHub (no laptop setup needed)
+
+Team members can change the app from **any computer or Chromebook**, right on the GitHub website. When you save a change, GitHub republishes the live site in about a minute.
+
+**Before you start (once):**
+1. Get a GitHub account. ⚠️ GitHub accounts are for people **13 and older**. Pick a username **without your real name**, because it shows publicly next to every change.
+2. In GitHub, go to **Settings → Emails** and turn on **Keep my email addresses private**.
+3. Ask an owner of the `wi-invasive-plants` organization to give you **Write** access to the repository.
+
+**Change one file:**
+1. Open https://github.com/wi-invasive-plants/wi-invasive-plants.github.io and click the file (for example `invasive-plants.json`).
+2. Click the ✏️ **pencil**, make your change, then click **Commit changes…**.
+3. Write a short message that says what you changed (example: "Add cypress spurge"), then click **Commit changes**.
+
+**Change several files at once:** on the repository page, press the **`.`** key. A full code editor opens in your browser. When you're done, use the **Source Control** panel on the left to commit.
+
+**Add a sample photo:** open the `samples` folder → **Add file → Upload files**. Then add its block to `samples/results.json` (see "Add your own sample" below).
+
+**Check your change:**
+- The **robot checker** runs on every change. Open the **Actions** tab: ✅ means all good. ❌ means something is broken. Click it to see the problem in plain words, like "Garlic mustard: category must be one of…" or "This file is broken (often a missing comma) … line 8 column 7".
+- After about 1–2 minutes, reload https://wi-invasive-plants.github.io on your phone and try it.
+
+**Undo a mistake:** every change is saved. Open the file → **History** → click an older version → copy it back with the ✏️ pencil. Or ask an owner to **Revert** the change.
+
+**What still needs an adult:** the Pl@ntNet key and the plant helper on Cloudflare. Normal changes (plants, words, colors, samples, docs) never need them.
+
 ## Run it on a laptop
 
 1. Open Terminal in this folder.
@@ -142,6 +168,7 @@ Samples work with **no internet and no helper**. The app loads them as soon as i
 | `EXPLAIN.md` | Kid-friendly explanation and judge Q&A |
 | `claude.md` | Rules for the AI coding assistant that helped build the app |
 | `.gitignore` | Files that should never be uploaded to GitHub |
+| `.github/workflows/check.yml` | The robot checker: GitHub runs it on every change to catch typos, broken lists, missing photos, and pasted keys |
 
 ## Libraries and services we use
 

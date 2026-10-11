@@ -34,6 +34,7 @@ Our app helps: **take a photo → find out if it might be invasive → learn abo
 | `EXPLAIN.md` | This file! |
 | `claude.md` | Rules we gave the AI coding helper that helped us build the app (like "keep it simple" and "never put names in the code"). |
 | `.gitignore` | A list of files that should never be uploaded to GitHub. |
+| `.github/workflows/check.yml` | Our robot checker. Every time we save a change on GitHub, a robot checks our files for mistakes (like a missing comma) and shows ✅ or ❌. |
 
 ## Words to know
 
@@ -74,6 +75,9 @@ Our app sends people to the DNR's own page about their plant, so they learn the 
 
 **Bonus: How do you keep the AI key safe?**
 Our code is public on GitHub, so the key can't go there, because anyone could copy it. Instead, the key is locked inside our plant helper on Cloudflare. Phones never see it. The helper only helps our own website, and only sends photos to Pl@ntNet. If someone tries to misuse it, the worst that can happen is using up the day's 500 free checks. No money is involved, and the key stays secret.
+
+**Bonus: How do you change the app?**
+Right on the GitHub website, from any computer. We click a file, click the pencil, make the change, and save. A robot checks our work for mistakes, and the live app updates by itself in about a minute.
 
 **Bonus: Where do the sample photos come from?**
 They're real photos from Wikimedia Commons that photographers shared for anyone to use. We credit each photographer in the app's ℹ️ About box. We removed hidden data (like GPS) from the photos, and saved the AI's real answers so the demo works without Wi-Fi.
