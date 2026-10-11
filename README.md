@@ -53,7 +53,7 @@ Team members can change the app from **any computer or Chromebook**, right on th
 - The **robot checker** runs on every change. Open the **Actions** tab: ✅ means all good. ❌ means something is broken. Click it to see the problem in plain words, like "Garlic mustard: category must be one of…" or "This file is broken (often a missing comma) … line 8 column 7".
 - After about 1–2 minutes, reload https://wi-invasive-plants.github.io on your phone and try it.
 
-**Undo a mistake:** every change is saved. Open the file → **History** → click an older version → copy it back with the ✏️ pencil. Or ask an owner to **Revert** the change.
+**Undo a mistake:** every change is saved. Open the file → **History** → click the version from before the mistake → **Raw** → copy it all, then paste it back with the ✏️ pencil and commit. Not sure what broke? Ask an adult; they can put any file back exactly as it was.
 
 **What still needs an adult:** the Pl@ntNet key and the plant helper on Cloudflare. Normal changes (plants, words, colors, samples, docs) never need them.
 
