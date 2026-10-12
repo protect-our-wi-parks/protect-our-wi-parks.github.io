@@ -25,15 +25,14 @@
   </header>
 
   <main>
-    <!-- Front page: the watch list. Know the plant? Tap "I found this". Not sure? Take a photo. -->
+    <!-- Front page: the watch list. Tap a plant to see it up close and report it. Not sure? Take a photo. -->
     <section id="screen-home">
       <div class="hero">
         <h2>Watch out for these invasive plants!</h2>
-        <p>If you see one, report it. Know the plant? Tap <strong>I found this</strong>.
-          Not sure? Take a photo and our plant AI will help.</p>
+        <p>If you see one, report it. Tap a plant to see how to spot it.</p>
         <button class="link-button" id="home-about">How does this app work?</button>
       </div>
-      <div id="plant-cards" class="plant-cards"></div>
+      <div id="plant-grid" class="plant-grid"></div>
       <p class="hint">These are 14 of the most common invasive plants in Wisconsin.
         <a href="https://dnr.wisconsin.gov/topic/Invasives/RegulatedSpecies" target="_blank" rel="noopener">See every regulated species on the DNR website</a>.</p>
       <div class="actions">
@@ -119,6 +118,15 @@
     </section>
   </main>
 
+  <!-- The pop-out card for one plant. It opens when you tap a plant on the front page. -->
+  <dialog id="plant-sheet">
+    <div id="sheet-content" class="sheet-content"></div>
+    <form method="dialog" class="sheet-buttons">
+      <button class="big" type="button" id="sheet-report">📍 I found this: report it</button>
+      <button class="small" value="close">Close</button>
+    </form>
+  </dialog>
+
   <!-- The About box: everything about how the app works, where data goes, and who made what. -->
   <dialog id="about">
     <form method="dialog">
@@ -130,7 +138,7 @@
 
       <h3>How to use it</h3>
       <ul>
-        <li><strong>You know the plant:</strong> find it in the list, tap <strong>I found this</strong>, show where it is, then report it.</li>
+        <li><strong>You know the plant:</strong> tap it on the front page, then <strong>I found this: report it</strong>. Show where it is, then report it.</li>
         <li><strong>You're not sure:</strong> tap <strong>Not sure? Take a photo</strong>. The Pl@ntNet AI guesses the plant,
           we check Wisconsin's invasive list, then you can report it.</li>
         <li><strong>Reporting:</strong> we show the plant and the exact spot so you can copy them, then open the DNR's own report page.</li>

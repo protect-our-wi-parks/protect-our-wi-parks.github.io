@@ -100,42 +100,99 @@ main > section h2 {
   font-size: 17px;
 }
 
-/* The plant cards: one column on phones, more on wider screens. */
-.plant-cards {
+/* The grid of plant tiles on the front page: about 3 across on most phones. */
+.plant-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-  gap: 16px;
-  margin-bottom: 16px;
+  grid-template-columns: repeat(auto-fill, minmax(86px, 1fr));
+  gap: 10px;
+  margin-bottom: 12px;
 }
 
-.plant-card {
+/* One plant tile: a square photo and the name. Red border = prohibited. */
+.plant-tile {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  padding: 0;
   overflow: hidden;
-  border-radius: 14px;
   background: white;
-  border: 1px solid #e3dfd2;
+  border: 2px solid #e3dfd2;
+  border-radius: 12px;
+  color: var(--text);
+  font-size: 15px;
+  font-weight: bold;
+  line-height: 1.2;
 }
 
-.plant-card img {
+.plant-tile img {
   display: block;
   width: 100%;
-  aspect-ratio: 4 / 3;
+  aspect-ratio: 1;
   object-fit: cover;
   background: #e3dfd2;
 }
 
-.plant-card-body {
+.plant-tile span {
+  padding: 6px 4px 8px;
+}
+
+.plant-tile.prohibited {
+  border-color: #c62828;
+}
+
+/* The little ⚠️ in the corner of plants that are dangerous to touch. */
+.plant-tile .tile-warning {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  padding: 0 4px;
+  background: white;
+  border-radius: 8px;
+}
+
+/* The pop-out card for one plant. On phones it slides up from the bottom of the screen. */
+#plant-sheet {
+  width: 100%;
+  max-width: 600px;
+  max-height: 92dvh;
+  margin: auto auto 0;
+  padding: 0;
+  overflow-y: auto;
+  border-radius: 16px 16px 0 0;
+}
+
+#plant-sheet img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+}
+
+.sheet-content {
   display: flex;
   flex-direction: column;
   gap: 8px;
-  padding: 12px 14px 14px;
+  padding: 12px 16px;
 }
 
-.plant-card-body h3,
-.plant-card-body p {
+.sheet-content h2,
+.sheet-content p {
   margin: 0;
 }
 
-/* The colored label on each card: orange-red = prohibited, green = restricted, purple = depends on county. */
+/* The pop-out card's buttons stay in reach at the bottom while you scroll. */
+#plant-sheet .sheet-buttons {
+  position: sticky;
+  bottom: 0;
+  gap: 10px;
+  padding: 12px 16px;
+  padding-bottom: max(12px, env(safe-area-inset-bottom));
+  background: var(--cream);
+  border-top: 1px solid #e3dfd2;
+}
+
+/* The colored label on each plant: red = prohibited, green = restricted, purple = depends on county. */
 .badge {
   align-self: flex-start;
   padding: 2px 10px;
@@ -475,6 +532,10 @@ dialog p {
 
   .hero h2 {
     font-size: 22px;
+  }
+
+  .plant-tile {
+    font-size: 14px;
   }
 
   main {

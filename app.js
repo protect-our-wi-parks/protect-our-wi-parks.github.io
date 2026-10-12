@@ -67,43 +67,76 @@ function setUpButtons() {
   document.getElementById("gps-button").addEventListener("click", findMe);
   document.getElementById("copy-button").addEventListener("click", copyDetails);
   document.getElementById("start-over").addEventListener("click", startOver);
+  document.getElementById("sheet-report").addEventListener("click", reportShownPlant);
+  document.getElementById("plant-sheet").addEventListener("click", closeWhenTappedOutside);
 }
 
 
 // ===== 3. Watch list (the front page) =====
 
-// What the colored label on each card says.
+// What the colored label on each plant says.
 const BADGE_WORDS = {
   prohibited: "🚨 Prohibited: report it right away",
   restricted: "Restricted",
   "depends-on-county": "Prohibited or restricted, depending on the county",
 };
 
-// Make a card for each front-page plant, in order, and credit each photo in the About box.
-function showPlantCards() {
+// Make a photo tile for each front-page plant, in order, and credit each photo in the About box.
+function showPlantTiles() {
   const front = invasivePlants.filter((plant) => plant.frontPage).sort((a, b) => a.frontPage - b.frontPage);
   for (const plant of front) {
-    document.getElementById("plant-cards").append(plantCard(plant));
+    document.getElementById("plant-grid").append(plantTile(plant));
     creditPhoto(plant);
   }
 }
 
-// Build one card: photo, name, label, how to spot it, any warning, and the "I found this" button.
-function plantCard(plant) {
-  const card = document.createElement("article");
-  card.className = "plant-card";
-  const photo = addText(card, "img", "");
+// Build one small tile: a photo and the name. Tapping it opens the plant's pop-out card.
+function plantTile(plant) {
+  const tile = document.createElement("button");
+  tile.className = "plant-tile " + plant.category;
+  const photo = addText(tile, "img", "");
+  photo.src = plant.photo;
+  photo.alt = ""; // the name under the photo already says what it is
+  addText(tile, "span", plant.commonName);
+  if (plant.warning) addText(tile, "span", "⚠️", "tile-warning").title = "Don't touch";
+  tile.addEventListener("click", () => openPlantCard(plant));
+  return tile;
+}
+
+// The plant whose pop-out card is open.
+let shownPlant = null;
+
+// Open the pop-out card: big photo, label, any warning, how to spot it, and why it's a problem.
+function openPlantCard(plant) {
+  shownPlant = plant;
+  const body = document.getElementById("sheet-content");
+  body.replaceChildren();
+  const photo = addText(body, "img", "");
   photo.src = plant.photo;
   photo.alt = "Photo of " + plant.commonName;
-  const body = addText(card, "div", "", "plant-card-body");
-  addText(body, "h3", plant.commonName);
+  const name = addText(body, "h2", plant.commonName);
   addText(body, "p", plant.scientificName, "science-name");
   addText(body, "p", BADGE_WORDS[plant.category], "badge " + plant.category);
-  addText(addText(body, "p", ""), "strong", "Look for: ").after(plant.lookFor);
   if (plant.warning) addText(body, "p", "⚠️ " + plant.warning, "warning");
-  addText(body, "button", "I found this →", "big").addEventListener("click", () => startKnownPath(plant));
+  addText(addText(body, "p", ""), "strong", "Look for: ").after(plant.lookFor);
+  addText(addText(body, "p", ""), "strong", "Why it's a problem: ").after(plant.why);
   addLink(body, "More about it on the DNR website", plant.dnrPage);
-  return card;
+  const sheet = document.getElementById("plant-sheet");
+  sheet.showModal();
+  name.tabIndex = -1;
+  name.focus(); // start at the top (the photo and name), not at the first button
+  sheet.scrollTop = 0;
+}
+
+// "I found this" on the pop-out card: close the card and start the report.
+function reportShownPlant() {
+  document.getElementById("plant-sheet").close();
+  startKnownPath(shownPlant);
+}
+
+// Tapping the dark area outside the pop-out card closes it.
+function closeWhenTappedOutside(event) {
+  if (event.target === event.currentTarget) event.currentTarget.close();
 }
 
 // Add a link that opens in a new tab, so the app stays open.
@@ -286,10 +319,10 @@ async function loadInvasiveList() {
   try {
     const response = await fetch("invasive-plants.json");
     invasivePlants = (await response.json()).plants;
-    showPlantCards();
+    showPlantTiles();
   } catch {
     invasivePlants = null; // the result screen will say we couldn't check the list
-    document.getElementById("plant-cards").textContent = "😕 Couldn't load the plant list. Check the internet and reload the page.";
+    document.getElementById("plant-grid").textContent = "😕 Couldn't load the plant list. Check the internet and reload the page.";
   }
 }
 

@@ -3,7 +3,7 @@
 A phone-friendly web app for a FIRST LEGO League Innovation Project. The front page says **"Watch out for these invasive plants! If you see one, report it."** and shows 14 of Wisconsin's most common invasive plants. If you see one, the app helps you report it to the Wisconsin DNR.
 
 **Two ways to report:**
-- **You know the plant (100% sure):** tap **I found this** on its card → show where it is → report. No photo, no AI.
+- **You know the plant (100% sure):** tap its tile on the front page → **I found this: report it** on its pop-out card → show where it is → report. No photo, no AI.
 - **You're not sure:** tap **Not sure? Take a photo** → photo → where it is → the Pl@ntNet AI identifies it and we check Wisconsin's invasive list → report.
 
 The report screen shows the plant and the exact spot, with a **Copy details** button, then opens the **DNR's official report page**. The app never sends anything to the DNR by itself.
@@ -28,7 +28,7 @@ The Pl@ntNet key is stored **only** in Cloudflare, as the `PLANTNET_KEY` secret 
 
 | Screen | What you see | What you do |
 |---|---|---|
-| Front page | **"Watch out for these invasive plants! If you see one, report it."** and 14 plant cards. Each card has a photo, a Prohibited/Restricted label, how to spot it, and a red **Don't touch!** warning on dangerous plants | Scroll the cards. Know the plant? Tap **I found this →**. Not sure? Tap **📷 Not sure? Take a photo** (pinned at the bottom). |
+| Front page | **"Watch out for these invasive plants! If you see one, report it."** and a grid of 14 small photo tiles (3 across on most phones). A red border marks prohibited plants, and ⚠️ marks plants that are dangerous to touch | Tap a tile to open its **pop-out card**: big photo, Prohibited/Restricted label, how to spot it, why it's a problem, any **Don't touch!** warning, and a DNR link. Know it? Tap **📍 I found this: report it**. Not sure? Tap **📷 Not sure? Take a photo** (pinned at the bottom). |
 | Take a photo *(not-sure path only)* | **📷 Take photo** / **🖼️ My photos** | Take or pick a clear, close photo. |
 | Where is the plant? | A map of Wisconsin | Tap **📍 Find me** (GPS), or tap the map. If the photo has GPS saved inside, the pin drops by itself. |
 | What plant is it? *(not-sure path only)* | "Asking the plant AI…", then **⚠️ Possible invasive plant!**, **✅ Not on Wisconsin's invasive list**, or **🤔 The AI isn't sure**, plus the AI's top 3 guesses | Read the card, then tap **Next: Report it →**. |
@@ -135,7 +135,7 @@ The app never sends anything to the DNR (no emails, no forms). The last screen g
 
 ## The front page (watch list)
 
-The front page shows the plants in `invasive-plants.json` that have a `frontPage` number, in that order. Today there are 14, chosen because they're the most common in Wisconsin or dangerous to touch:
+The front page shows the plants in `invasive-plants.json` that have a `frontPage` number, in that order, as small photo tiles. Tapping a tile opens that plant's pop-out card. Today there are 14, chosen because they're the most common in Wisconsin or dangerous to touch:
 garlic mustard, common and glossy buckthorn, Amur honeysuckle (standing in for the bush honeysuckles), wild parsnip, purple loosestrife, Japanese knotweed, spotted knapweed, phragmites, Oriental bittersweet, multiflora rose, Japanese barberry, poison hemlock, and giant hogweed.
 
 Each front-page plant has these extra parts:
@@ -143,7 +143,7 @@ Each front-page plant has these extra parts:
 | Part | What it's for |
 |---|---|
 | `frontPage` | Its place on the front page (1 = first). Leave it out to hide the plant from the front page. The AI still checks it. |
-| `lookFor` | One or two short sentences on how to spot it, written from the plant's DNR page |
+| `lookFor` | One or two short sentences on how to spot it, written from the plant's DNR page (shown on the pop-out card, with `why`) |
 | `photo` | Its photo in the `photos/` folder |
 | `photoCredit`, `photoCreditUrl` | Who took the photo and its license. These show in the ℹ️ About box. |
 
