@@ -25,15 +25,25 @@
   </header>
 
   <main>
-    <!-- Screen 1: take or pick a photo -->
-    <section id="screen-photo">
-      <!-- A short "what is this app?" note. It hides after a photo is picked, to make room. -->
-      <div id="intro" class="intro">
-        <p><strong>Found a plant that might be invasive?</strong>
-          Snap a photo. We'll check Wisconsin's invasive plant list and show you what the DNR says about it.
-          <button class="link-button" id="intro-about">How does this work?</button></p>
+    <!-- Front page: the watch list. Know the plant? Tap "I found this". Not sure? Take a photo. -->
+    <section id="screen-home">
+      <div class="hero">
+        <h2>Watch out for these invasive plants!</h2>
+        <p>If you see one, report it. Know the plant? Tap <strong>I found this</strong>.
+          Not sure? Take a photo and our plant AI will help.</p>
+        <button class="link-button" id="home-about">How does this app work?</button>
       </div>
-      <p class="step">Step 1 of 4</p>
+      <div id="plant-cards" class="plant-cards"></div>
+      <p class="hint">These are 14 of the most common invasive plants in Wisconsin.
+        <a href="https://dnr.wisconsin.gov/topic/Invasives/RegulatedSpecies" target="_blank" rel="noopener">See every regulated species on the DNR website</a>.</p>
+      <div class="actions">
+        <button class="big" id="photo-start">📷 Not sure? Take a photo</button>
+      </div>
+    </section>
+
+    <!-- Take or pick a photo (only when you're not sure what the plant is) -->
+    <section id="screen-photo">
+      <p class="step"></p>
       <h2>Take a photo of the plant</h2>
       <p id="photo-tip">Tap <strong>📷 Take photo</strong>. Get close and show the leaves clearly.</p>
       <img id="photo-preview" alt="The plant photo you picked" hidden>
@@ -47,29 +57,29 @@
             <input type="file" id="photo-gallery" accept="image/*">
           </label>
         </div>
-        <button class="big" id="sample-button" hidden>🧪 Wisconsin Invasive Plants</button>
-        <button class="big" id="photo-next" data-go="location" hidden>Next →</button>
+        <button class="big" id="photo-next" data-go="next" hidden>Next →</button>
+        <button class="small" data-go="back">← Back to the plant list</button>
       </div>
     </section>
 
-    <!-- Screen 2: where is the plant? -->
+    <!-- Where is the plant? -->
     <section id="screen-location">
-      <p class="step">Step 2 of 4</p>
+      <p class="step"></p>
       <h2>Where is the plant?</h2>
       <p id="location-tip">Standing next to it? Tap <strong>📍 Find me</strong>. Or tap the map where the plant is.</p>
       <div id="map" role="application" aria-label="Map. Tap where the plant is."></div>
       <div class="actions">
         <div class="row">
-          <button class="small" data-go="photo">← Back</button>
+          <button class="small" data-go="back">← Back</button>
           <button class="big" id="gps-button">📍 Find me</button>
         </div>
-        <button class="big" id="location-next" data-go="result" hidden>Next →</button>
+        <button class="big" id="location-next" data-go="next" hidden>Next →</button>
       </div>
     </section>
 
-    <!-- Screen 3: what plant is it? -->
+    <!-- What plant is it? (the plant AI's answer) -->
     <section id="screen-result">
-      <p class="step">Step 3 of 4</p>
+      <p class="step"></p>
       <h2>What plant is it?</h2>
       <p id="result-tip" aria-live="polite"></p>
       <div id="result-card" class="card" hidden></div>
@@ -78,43 +88,36 @@
         <ol id="guesses"></ol>
       </div>
       <div class="actions">
-        <button class="big" id="result-next" data-go="learn" hidden>Learn more →</button>
+        <button class="big" id="result-next" data-go="next" hidden>Next: Report it →</button>
         <div class="row">
-          <button class="small" data-go="location">← Back</button>
+          <button class="small" data-go="back">← Back</button>
           <button class="small" id="retry-button" hidden>🔄 Try again</button>
         </div>
       </div>
     </section>
 
-    <!-- Screen 4: learn more from the DNR -->
-    <section id="screen-learn">
-      <p class="step">Step 4 of 4</p>
-      <h2>Learn more from the DNR</h2>
-      <p id="learn-tip"></p>
+    <!-- Report it to the DNR: copy the details, then use the DNR's own report page -->
+    <section id="screen-report">
+      <p class="step"></p>
+      <h2>Report it to the DNR</h2>
+      <p id="report-tip"></p>
+      <ol class="todo">
+        <li>Tap <strong>📋 Copy details</strong>.</li>
+        <li>Tap <strong>📮 Report on the DNR website</strong> and follow their steps. Paste the details, and add your photo if you have one.</li>
+      </ol>
       <div class="card">
-        <h3>📍 Where you found it</h3>
-        <p id="spot-text"></p>
+        <pre id="report-details"></pre>
         <p><a id="spot-map" target="_blank" rel="noopener">🗺️ See this spot on a map</a></p>
-        <p class="hint">Want to report it? The DNR will ask for this spot and your photo.
-          <a href="https://dnr.wisconsin.gov/topic/Invasives/report" target="_blank" rel="noopener">How to report to the DNR</a></p>
+        <button class="small" id="copy-button">📋 Copy details</button>
       </div>
+      <p><a id="dnr-link" target="_blank" rel="noopener">🌐 Learn more on the DNR website</a></p>
       <p><button class="link-button" id="start-over">🔁 Check another plant</button></p>
       <div class="actions">
-        <a id="dnr-link" class="big button-link" target="_blank" rel="noopener">🌐 Learn more on the DNR website</a>
-        <button class="small" data-go="result">← Back</button>
+        <a class="big button-link" href="https://dnr.wisconsin.gov/topic/Invasives/report" target="_blank" rel="noopener">📮 Report on the DNR website</a>
+        <button class="small" data-go="back">← Back</button>
       </div>
     </section>
   </main>
-
-  <!-- The sample picker. Each sample is a real photo with a saved AI answer, so it works without internet. -->
-  <dialog id="sample-picker">
-    <form method="dialog">
-      <h2>🧪 Try a sample</h2>
-      <p class="hint">Real plant photos with saved answers, so they work without internet.</p>
-      <div id="sample-buttons" class="sample-grid"></div>
-      <button class="small" value="cancel">Cancel</button>
-    </form>
-  </dialog>
 
   <!-- The About box: everything about how the app works, where data goes, and who made what. -->
   <dialog id="about">
@@ -122,20 +125,20 @@
       <h2>ℹ️ About this app</h2>
 
       <h3>What it does</h3>
-      <p>It helps you spot plants that might be <strong>invasive</strong> (plants from other places that crowd out
-        Wisconsin's own plants) and takes you to the Wisconsin DNR's page about them.</p>
+      <p>It shows you Wisconsin's most common <strong>invasive</strong> plants (plants from other places that crowd out
+        Wisconsin's own plants) and helps you report one to the Wisconsin DNR when you see it.</p>
 
       <h3>How to use it</h3>
-      <ol>
-        <li><strong>Photo:</strong> take a clear, close photo of the leaves or flowers.</li>
-        <li><strong>Location:</strong> tap "Find me" or tap the map where the plant is.</li>
-        <li><strong>What plant is it?</strong> The Pl@ntNet AI guesses, and we check Wisconsin's invasive plant list.</li>
-        <li><strong>Learn more:</strong> we take you to the DNR's page about your plant, and show where you found it.</li>
-      </ol>
+      <ul>
+        <li><strong>You know the plant:</strong> find it in the list, tap <strong>I found this</strong>, show where it is, then report it.</li>
+        <li><strong>You're not sure:</strong> tap <strong>Not sure? Take a photo</strong>. The Pl@ntNet AI guesses the plant,
+          we check Wisconsin's invasive list, then you can report it.</li>
+        <li><strong>Reporting:</strong> we show the plant and the exact spot so you can copy them, then open the DNR's own report page.</li>
+      </ul>
 
       <h3>The AI can be wrong</h3>
       <p>That's why we always say <strong>"possible"</strong> and show how sure the AI is.
-        Experts at the DNR make the final call. You can learn about any plant on the DNR's website, even if the app isn't sure.</p>
+        Experts at the DNR make the final call. If you know the plant for sure, pick it from the list instead.</p>
 
       <h3>Stay safe</h3>
       <p>Don't touch plants you don't know. Wild parsnip and giant hogweed can burn skin, and poison hemlock is very
@@ -143,14 +146,14 @@
 
       <h3>Where your photo and location go</h3>
       <ul>
-        <li>Your <strong>photo</strong> is made smaller and sent through our plant helper to Pl@ntNet to be identified.
-          Nothing is saved, and there's no login.</li>
-        <li>Your <strong>location</strong> stays on your phone. We show it to you at the end, in case you report the plant to the DNR.</li>
+        <li>If you use the plant AI, your <strong>photo</strong> is made smaller and sent through our plant helper to Pl@ntNet
+          to be identified. Nothing is saved, and there's no login.</li>
+        <li>Your <strong>location</strong> stays on your phone. We show it to you at the end so you can copy it into your DNR report.</li>
         <li>The <strong>map pictures</strong> come from OpenStreetMap, so they can tell roughly which area you're looking at.</li>
       </ul>
 
       <h3>Reporting to the DNR</h3>
-      <p>This app never sends anything. To report a plant, use the DNR's own way:
+      <p>This app never sends anything by itself. You copy the details and report through the DNR's own page:
         <a href="https://dnr.wisconsin.gov/topic/Invasives/report" target="_blank" rel="noopener">DNR: Report invasive species</a></p>
 
       <h3>Sources and credits</h3>

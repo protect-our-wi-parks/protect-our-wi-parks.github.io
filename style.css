@@ -77,48 +77,84 @@ main > section h2 {
   margin: 0 0 12px;
 }
 
-/* The welcome note on the first screen. */
-.intro {
-  background: white;
-  border-left: 6px solid var(--green);
-  border-radius: 10px;
-  padding: 12px 14px;
+/* The green "Watch out!" area at the top of the front page. */
+.hero {
+  margin: -16px -16px 16px;
+  padding: 4px 16px 16px;
+  background: var(--green);
+  color: white;
+}
+
+.hero h2 {
+  margin: 0 0 6px;
+  font-size: 26px;
+}
+
+.hero p {
+  margin: 0 0 4px;
   font-size: 18px;
 }
 
-.intro strong {
-  display: block;
-  color: var(--green-dark);
+.hero .link-button {
+  color: white;
+  font-size: 17px;
 }
 
-.intro p:last-child {
-  margin-bottom: 0;
-}
-
-/* The sample picker: two picture buttons per row. */
-.sample-grid {
+/* The plant cards: one column on phones, more on wider screens. */
+.plant-cards {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 10px;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 16px;
+  margin-bottom: 16px;
 }
 
-.sample {
+.plant-card {
+  overflow: hidden;
+  border-radius: 14px;
+  background: white;
+  border: 1px solid #e3dfd2;
+}
+
+.plant-card img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  background: #e3dfd2;
+}
+
+.plant-card-body {
   display: flex;
   flex-direction: column;
-  padding: 0 0 6px;
-  overflow: hidden;
-  background: white;
-  color: var(--green-dark);
-  border: 2px solid var(--green);
-  font-size: 17px;
-  font-weight: bold;
+  gap: 8px;
+  padding: 12px 14px 14px;
 }
 
-.sample img {
-  width: 100%;
-  height: 90px;
-  object-fit: cover;
-  margin-bottom: 4px;
+.plant-card-body h3,
+.plant-card-body p {
+  margin: 0;
+}
+
+/* The colored label on each card: orange-red = prohibited, green = restricted, purple = depends on county. */
+.badge {
+  align-self: flex-start;
+  padding: 2px 10px;
+  border-radius: 12px;
+  font-size: 15px;
+  font-weight: bold;
+  color: white;
+}
+
+.badge.prohibited {
+  background: #c62828;
+}
+
+.badge.restricted {
+  background: var(--green-dark);
+}
+
+.badge.depends-on-county {
+  background: #6a1b9a;
 }
 
 /* "Step 1 of 4" label. */
@@ -360,7 +396,7 @@ a.button-link {
   text-decoration: underline;
 }
 
-/* Boxes that pop up over the app (About and the sample picker). */
+/* The About box, which pops up over the app. */
 dialog {
   width: min(92vw, 480px);
   border: none;
@@ -370,9 +406,8 @@ dialog {
   color: var(--text);
 }
 
-/* The About box and sample picker can be long, so they scroll inside. */
-#about,
-#sample-picker {
+/* The About box is long, so it scrolls inside. */
+#about {
   max-height: 88dvh;
   overflow-y: auto;
 }
@@ -390,12 +425,6 @@ dialog ol {
 
 dialog li {
   margin-bottom: 4px;
-}
-
-/* "How does this work?" link inside the welcome note. */
-.intro .link-button {
-  display: inline-block;
-  font-size: 18px;
 }
 
 dialog::backdrop {
@@ -444,9 +473,8 @@ dialog p {
     font-size: 18px;
   }
 
-  .intro,
-  .intro .link-button {
-    font-size: 16px;
+  .hero h2 {
+    font-size: 22px;
   }
 
   main {
@@ -469,4 +497,20 @@ dialog p {
     gap: 8px;
     padding-top: 8px;
   }
+}
+
+/* The numbered steps on the report screen. */
+.todo {
+  margin: 0 0 12px;
+  padding-left: 26px;
+}
+
+/* The report details, ready to copy into the DNR's report. */
+#report-details {
+  margin: 0 0 8px;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere; /* long map links wrap instead of running off the screen */
+  font-family: inherit;
+  font-size: 16px;
+  user-select: text;
 }

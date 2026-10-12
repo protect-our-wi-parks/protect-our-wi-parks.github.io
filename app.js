@@ -1,30 +1,52 @@
 // ============================================================
 // Invasive Plant Reporter
-// Sections: 1 Screens · 2 Buttons · 3 Photo · 4 Location · 5 Invasive list
-//           6 Plant ID · 7 Result · 8 Learn more · 9 Samples · 10 Start
+// Sections: 1 Screens and paths · 2 Buttons · 3 Watch list · 4 Photo · 5 Location
+//           6 Invasive list · 7 Plant ID · 8 Result · 9 Report · 10 Start
 // ============================================================
 
 
-// ===== 1. Screens =====
+// ===== 1. Screens and paths =====
 
-// The names of our four screens, in order.
-const SCREENS = ["photo", "location", "result", "learn"];
+// Every screen in the app.
+const SCREENS = ["home", "photo", "location", "result", "report"];
+
+// The two paths through the app. Next and Back follow the path you're on.
+const PATHS = {
+  known: ["home", "location", "report"],                    // you picked the plant from the list
+  photo: ["home", "photo", "location", "result", "report"], // you're not sure, so the plant AI helps
+};
+let path = PATHS.photo;
+let currentScreen = "home";
 
 // Show one screen and hide all the others. Some screens need to get ready first.
 function showScreen(name) {
+  currentScreen = name;
   for (const screen of SCREENS) {
     document.getElementById("screen-" + screen).hidden = (screen !== name);
   }
+  showStep(name);
   window.scrollTo(0, 0);
   if (name === "location") showMap();
   if (name === "result") identifyPhoto();
-  if (name === "learn") updateLearnScreen();
+  if (name === "report") updateReportScreen();
 }
 
-// Make every button with a data-go="..." move to that screen when tapped.
+// Write "Step 1 of 2" at the top of a screen. The front page doesn't count as a step.
+function showStep(name) {
+  const label = document.querySelector(`#screen-${name} .step`);
+  if (label) label.textContent = `Step ${path.indexOf(name)} of ${path.length - 1}`;
+}
+
+// Go to the next or the previous screen on the path we're on.
+function move(direction) {
+  const step = direction === "next" ? 1 : -1;
+  showScreen(path.at(path.indexOf(currentScreen) + step) || "home");
+}
+
+// Make every button with data-go="next" or data-go="back" move along the path.
 function setUpNavButtons() {
   for (const button of document.querySelectorAll("[data-go]")) {
-    button.addEventListener("click", () => showScreen(button.dataset.go));
+    button.addEventListener("click", () => move(button.dataset.go));
   }
 }
 
@@ -36,18 +58,85 @@ function openAbout() {
   document.getElementById("about").showModal();
 }
 
-// Hook up the buttons that work on any screen: About, samples, Try again, and Check another plant.
+// Hook up the buttons that aren't Next or Back.
 function setUpButtons() {
   document.getElementById("about-button").addEventListener("click", openAbout);
-  document.getElementById("intro-about").addEventListener("click", openAbout);
-  document.getElementById("sample-button").addEventListener("click", openSamples);
+  document.getElementById("home-about").addEventListener("click", openAbout);
+  document.getElementById("photo-start").addEventListener("click", startPhotoPath);
   document.getElementById("retry-button").addEventListener("click", identifyPhoto);
-  document.getElementById("start-over").addEventListener("click", startOver);
   document.getElementById("gps-button").addEventListener("click", findMe);
+  document.getElementById("copy-button").addEventListener("click", copyDetails);
+  document.getElementById("start-over").addEventListener("click", startOver);
 }
 
 
-// ===== 3. Photo =====
+// ===== 3. Watch list (the front page) =====
+
+// What the colored label on each card says.
+const BADGE_WORDS = {
+  prohibited: "🚨 Prohibited: report it right away",
+  restricted: "Restricted",
+  "depends-on-county": "Prohibited or restricted, depending on the county",
+};
+
+// Make a card for each front-page plant, in order, and credit each photo in the About box.
+function showPlantCards() {
+  const front = invasivePlants.filter((plant) => plant.frontPage).sort((a, b) => a.frontPage - b.frontPage);
+  for (const plant of front) {
+    document.getElementById("plant-cards").append(plantCard(plant));
+    creditPhoto(plant);
+  }
+}
+
+// Build one card: photo, name, label, how to spot it, any warning, and the "I found this" button.
+function plantCard(plant) {
+  const card = document.createElement("article");
+  card.className = "plant-card";
+  const photo = addText(card, "img", "");
+  photo.src = plant.photo;
+  photo.alt = "Photo of " + plant.commonName;
+  const body = addText(card, "div", "", "plant-card-body");
+  addText(body, "h3", plant.commonName);
+  addText(body, "p", plant.scientificName, "science-name");
+  addText(body, "p", BADGE_WORDS[plant.category], "badge " + plant.category);
+  addText(addText(body, "p", ""), "strong", "Look for: ").after(plant.lookFor);
+  if (plant.warning) addText(body, "p", "⚠️ " + plant.warning, "warning");
+  addText(body, "button", "I found this →", "big").addEventListener("click", () => startKnownPath(plant));
+  addLink(body, "More about it on the DNR website", plant.dnrPage);
+  return card;
+}
+
+// Add a link that opens in a new tab, so the app stays open.
+function addLink(parent, words, address) {
+  const link = addText(parent, "a", words);
+  link.href = address;
+  link.target = "_blank";
+  link.rel = "noopener";
+  return link;
+}
+
+// List a plant's photo credit in the About box.
+function creditPhoto(plant) {
+  addLink(addText(document.getElementById("credits"), "li", plant.commonName + " photo: "), plant.photoCredit, plant.photoCreditUrl);
+}
+
+// "I found this": the person knows the plant for sure, so we skip the photo and the plant AI.
+function startKnownPath(plant) {
+  clearAnswers();
+  path = PATHS.known;
+  decision = { kind: "known", guess: null, plant };
+  showScreen("location");
+}
+
+// "Not sure? Take a photo": the plant AI will help.
+function startPhotoPath() {
+  clearAnswers();
+  path = PATHS.photo;
+  showScreen("photo");
+}
+
+
+// ===== 4. Photo =====
 
 // The photo the user picked. We keep it so we can send it to the plant AI.
 let photoFile = null;
@@ -69,8 +158,6 @@ function usePhoto(file) {
   if (preview.src) URL.revokeObjectURL(preview.src);
   preview.src = URL.createObjectURL(file);
   preview.hidden = false;
-  document.getElementById("intro").hidden = true; // make room for the photo
-  document.getElementById("sample-button").hidden = true;
   showPhotoTip("Looks good! Tap Next. (Blurry? Take another one.)");
   document.getElementById("photo-camera-label").className = "small"; // Next becomes the main button
   document.getElementById("photo-next").hidden = false;
@@ -89,7 +176,7 @@ function setUpPhotoButtons() {
 }
 
 
-// ===== 4. Location =====
+// ===== 5. Location =====
 
 // Where the plant is: { lat, lon, source }. Empty until we know.
 let plantLocation = null;
@@ -106,15 +193,13 @@ const LOCATION_WORDS = {
   gps: "📍 Found you with GPS!",
   photo: "📷 Found the spot saved in your photo!",
   map: "🗺️ Pin dropped where you tapped.",
-  sample: "🧪 This is where the sample plant was found.",
 };
 
-// The same thing in short words, for the "Where you found it" box at the end.
+// The same thing in short words, for the report details at the end.
 const LOCATION_SOURCE_WORDS = {
   gps: "from phone GPS",
   photo: "from GPS saved in the photo",
   map: "picked on a map",
-  sample: "sample location",
 };
 
 // Change the tip above the map.
@@ -191,18 +276,20 @@ async function readPhotoLocation(file) {
 }
 
 
-// ===== 5. Invasive list =====
+// ===== 6. Invasive list =====
 
 // The Wisconsin invasive plant list from invasive-plants.json. Empty (null) until it loads.
 let invasivePlants = null;
 
-// Load the invasive plant list from our JSON file.
+// Load the invasive plant list from our JSON file, then show the front-page cards.
 async function loadInvasiveList() {
   try {
     const response = await fetch("invasive-plants.json");
     invasivePlants = (await response.json()).plants;
+    showPlantCards();
   } catch {
     invasivePlants = null; // the result screen will say we couldn't check the list
+    document.getElementById("plant-cards").textContent = "😕 Couldn't load the plant list. Check the internet and reload the page.";
   }
 }
 
@@ -222,7 +309,7 @@ function findInvasive(scientificName) {
 }
 
 
-// ===== 6. Plant ID (Pl@ntNet, through our plant helper) =====
+// ===== 7. Plant ID (Pl@ntNet, through our plant helper) =====
 
 // Our plant helper on Cloudflare. It holds the secret Pl@ntNet key, so the app never needs it.
 // If you set up your own helper (see README), put its address here.
@@ -271,12 +358,12 @@ function simpleGuess(result) {
 
 // Turn a plant AI problem into plain words.
 function plantIdErrorWords(error) {
-  if (error.status === 403) return `This website isn't allowed to use the plant helper yet. An adult needs to add "${location.origin}" to ALLOWED_SITES (see README). You can still try a sample.`;
-  if (error.status === 401 || error.status === 500) return "The plant helper's key isn't working. An adult needs to check it (see README). You can still try a sample.";
-  if (error.status === 429) return "We used up today's free plant checks. Try again tomorrow, or try a sample.";
+  if (error.status === 403) return `This website isn't allowed to use the plant helper yet. An adult needs to add "${location.origin}" to ALLOWED_SITES (see README).`;
+  if (error.status === 401 || error.status === 500) return "The plant helper's key isn't working. An adult needs to check it (see README).";
+  if (error.status === 429) return "We used up today's free plant checks. Try again tomorrow. If you know the plant, go back and pick it from the list.";
   if (error.status === 400 || error.status === 413 || error.status === 415) return "The AI couldn't read this photo. Go back and try a different photo.";
-  if (!navigator.onLine) return "No internet. The plant AI needs internet. You can still try a sample.";
-  return "The plant AI isn't answering right now. Tap Try again in a minute, or go back to Step 1 and try a sample.";
+  if (!navigator.onLine) return "No internet. The plant AI needs internet. If you know the plant, go back and pick it from the list.";
+  return "The plant AI isn't answering right now. Tap Try again in a minute.";
 }
 
 // Ask the AI about the photo (unless we already know the answer), then show the result.
@@ -284,7 +371,7 @@ async function identifyPhoto() {
   if (guessesFor === photoFile) return showResult(); // already have the answer for this photo
   if (asking) return;
   if (HELPER_URL.includes("USERNAME")) {
-    return showResultProblem("The plant helper isn't set up yet (see README). Go back to Step 1 and try a sample.");
+    return showResultProblem("The plant helper isn't set up yet (see README). If you know the plant, go back and pick it from the list.");
   }
   hideResult();
   showResultTip("🔎 Asking the plant AI… this takes a few seconds.");
@@ -304,9 +391,10 @@ async function identifyPhoto() {
 }
 
 
-// ===== 7. Result =====
+// ===== 8. Result =====
 
-// What we decided about the plant: { kind, guess, plant }. The Learn more screen uses this.
+// What we know about the plant: { kind, guess, plant }. The report screen uses this.
+// kind is "known" (picked from the list), or the AI's answer: "invasive", "not-listed", "not-sure" or "no-list".
 let decision = null;
 
 // What each list category means, in plain words.
@@ -371,7 +459,7 @@ function showResult() {
   showGuesses();
   const next = document.getElementById("result-next");
   next.hidden = false;
-  showResultTip("Read the card, then tap Learn more.");
+  showResultTip("Read the card, then tap Next: Report it.");
 }
 
 // Fill the card for a possible invasive plant.
@@ -400,7 +488,7 @@ function fillOtherCard(card, { kind, guess }) {
     if (kind === "not-listed") addText(card, "p", "That plant isn't on our list of Wisconsin invasive plants.");
     if (kind === "not-sure") addText(card, "p", "That's a low score. A closer photo of the leaves or flowers can help.");
   }
-  addText(card, "p", "Not sure? Tap Learn more to see the DNR's tips.", "hint");
+  addText(card, "p", "Still think it's invasive? You can report it anyway.", "hint");
 }
 
 // Show the AI's top guesses, each with a bar showing how sure it is.
@@ -421,107 +509,86 @@ function showGuesses() {
 }
 
 
-// ===== 8. Learn more =====
+// ===== 9. Report =====
 
 // The DNR's main page about invasive species, for plants that aren't on our list.
 const DNR_INVASIVES_PAGE = "https://dnr.wisconsin.gov/topic/Invasives";
 
-// Fill in the last screen: a button to the right DNR page, and where the plant was found.
-function updateLearnScreen() {
+// Fill in the report screen: how sure we are, the details to copy, the map link, and the right DNR page.
+function updateReportScreen() {
   const plant = decision && decision.plant;
+  document.getElementById("report-tip").textContent = reportTip();
+  document.getElementById("report-details").textContent = reportDetails();
+  if (plantLocation) document.getElementById("spot-map").href = mapLink();
   const link = document.getElementById("dnr-link");
   link.href = plant ? plant.dnrPage : DNR_INVASIVES_PAGE;
-  link.textContent = plant ? `🌐 ${plant.commonName} on the DNR website` : "🌐 Invasive plants on the DNR website";
-  document.getElementById("learn-tip").textContent = plant
-    ? `The DNR has a page all about ${plant.commonName}: how to spot it and how to get rid of it.`
-    : "This plant isn't on our invasive list. The DNR's page shows which invasive plants to watch for.";
-  showSpot();
+  link.textContent = plant ? `🌐 Learn about ${plant.commonName} on the DNR website` : "🌐 Learn about invasive plants on the DNR website";
 }
 
-// Show where the plant was found, with a map link, so it's ready if someone reports it.
-function showSpot() {
-  if (!plantLocation) return;
-  const { lat, lon, source } = plantLocation;
-  document.getElementById("spot-text").textContent = `${lat.toFixed(5)}, ${lon.toFixed(5)} (${LOCATION_SOURCE_WORDS[source]})`;
-  document.getElementById("spot-map").href = `https://www.openstreetmap.org/?mlat=${lat}&mlon=${lon}#map=18/${lat}/${lon}`;
+// One sentence that says how sure we are about the plant.
+function reportTip() {
+  const { kind, guess, plant } = decision || {};
+  if (kind === "known") return `You picked ${plant.commonName} from the list. Thanks for watching out!`;
+  if (kind === "invasive") return `The AI thinks this may be ${plant.commonName} (${percent(guess.score)} sure). The DNR will check.`;
+  return "The AI didn't match this to our invasive list. If you still think it's invasive, you can report it anyway.";
 }
 
+// The details to copy into a DNR report: the plant, how we know, where it is, and the date.
+function reportDetails() {
+  const { kind, guess, plant } = decision || {};
+  const name = plant ? `${plant.commonName} (${plant.scientificName})` : guess ? `Not sure. AI's best guess: ${guess.commonName} (${guess.scientificName})` : "Not sure";
+  const how = kind === "known" ? "I recognized it" : guess ? `Pl@ntNet AI guess, ${percent(guess.score)} sure` : "The AI couldn't tell";
+  const lines = ["Possible invasive plant: " + name, "How I know: " + how];
+  if (plantLocation) {
+    const { lat, lon, source } = plantLocation;
+    lines.push(`Where: ${lat.toFixed(5)}, ${lon.toFixed(5)} (${LOCATION_SOURCE_WORDS[source]})`, "Map: " + mapLink());
+  }
+  lines.push("Date: " + new Date().toLocaleDateString("en-US", { dateStyle: "medium" }));
+  return lines.join("\n");
+}
 
-// ===== 9. Samples (demo mode) =====
+// A link to the plant's spot on OpenStreetMap.
+function mapLink() {
+  const { lat, lon } = plantLocation;
+  return `https://www.openstreetmap.org/?mlat=${lat}&mlon=${lon}#map=18/${lat}/${lon}`;
+}
 
-// Sample plants for practice and for judging rooms with no Wi-Fi. They come from samples/results.json.
-let samples = [];
-
-// Load the samples and their photos now, while we have internet, so they still work offline later.
-async function loadSamples() {
+// Copy the details so they can be pasted into the DNR's report.
+async function copyDetails() {
+  const button = document.getElementById("copy-button");
   try {
-    const list = (await (await fetch("samples/results.json")).json()).samples;
-    for (const sample of list) {
-      const response = await fetch("samples/" + sample.photo);
-      if (!response.ok) continue; // skip a sample if its photo is missing
-      const blob = await response.blob();
-      sample.file = new File([blob], sample.photo, { type: blob.type || "image/jpeg" });
-      samples.push(sample);
-    }
+    await navigator.clipboard.writeText(reportDetails());
+    button.textContent = "✅ Copied!";
   } catch {
-    // No samples. The "Try a sample" line just stays hidden.
+    button.textContent = "Press and hold the details to copy them";
   }
-  showSampleButtons();
-}
-
-// Make one picture button for each sample, and add each sample photo's credit to the About box.
-function showSampleButtons() {
-  const holder = document.getElementById("sample-buttons");
-  const credits = document.getElementById("credits");
-  for (const sample of samples) {
-    const button = addText(holder, "button", "", "sample");
-    const picture = addText(button, "img", "");
-    picture.src = URL.createObjectURL(sample.file);
-    picture.alt = "";
-    addText(button, "span", sample.name);
-    button.addEventListener("click", () => useSample(sample));
-    const link = addText(addText(credits, "li", sample.name + " sample: "), "a", sample.credit);
-    link.href = sample.creditUrl;
-    link.target = "_blank";
-  }
-  document.getElementById("sample-button").hidden = samples.length === 0;
-}
-
-// Open the sample picker.
-function openSamples() {
-  document.getElementById("sample-picker").showModal();
-}
-
-// Use a sample: its photo, its location, and its saved AI answer (so no internet is needed).
-function useSample(sample) {
-  usePhoto(sample.file);
-  guesses = sample.guesses;
-  guessesFor = sample.file;
-  setLocation(sample.location.lat, sample.location.lon, "sample");
-  showPhotoTip(`Sample: ${sample.name}. Tap Next. (${sample.credit})`);
+  setTimeout(() => (button.textContent = "📋 Copy details"), 3000);
 }
 
 
 // ===== 10. Start =====
 
-// The first tips on the photo and map screens, saved when the app opens so "Start over" can put them back.
+// The first tips on the photo and map screens, saved when the app opens so they can be put back.
 const FIRST_TIPS = {};
 
-// Clear everything to check another plant. (We don't reload the page, so this works without internet.)
-function startOver() {
+// Forget the last plant: photo, location, and answers. (No page reload, so this works without internet.)
+function clearAnswers() {
   photoFile = guesses = guessesFor = plantLocation = decision = null;
   if (pin) pin.remove();
   pin = null;
   if (map) map.setView(WISCONSIN_CENTER, 6);
   document.getElementById("photo-preview").hidden = true;
-  document.getElementById("intro").hidden = false;
-  document.getElementById("sample-button").hidden = samples.length === 0;
   document.getElementById("photo-next").hidden = true;
   document.getElementById("location-next").hidden = true;
   document.getElementById("photo-camera-label").className = "big";
   document.getElementById("gps-button").className = "big";
   for (const id in FIRST_TIPS) document.getElementById(id).innerHTML = FIRST_TIPS[id];
-  showScreen("photo");
+}
+
+// "Check another plant": clear everything and go back to the front page.
+function startOver() {
+  clearAnswers();
+  showScreen("home");
 }
 
 // Get the app ready when the page loads.
@@ -531,8 +598,7 @@ function start() {
   setUpButtons();
   setUpPhotoButtons();
   loadInvasiveList();
-  loadSamples();
-  showScreen("photo");
+  showScreen("home");
 }
 
 start();
