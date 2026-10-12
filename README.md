@@ -1,8 +1,12 @@
 # Invasive Plant Reporter
 
-A phone-friendly web app for a FIRST LEGO League Innovation Project. Take a photo of a plant, mark where it is, find out if it might be a Wisconsin invasive plant, and go to the Wisconsin DNR's page about it to learn more.
+A phone-friendly web app for a FIRST LEGO League Innovation Project. The front page says **"Watch out for these invasive plants! If you see one, report it."** and shows 14 of Wisconsin's most common invasive plants. If you see one, the app helps you report it to the Wisconsin DNR.
 
-**How it works:** Photo → Location → AI identifies the plant → check Wisconsin's invasive list → open the DNR's page about that plant. The app never sends anything to the DNR.
+**Two ways to report:**
+- **You know the plant (100% sure):** tap **I found this** on its card → show where it is → report. No photo, no AI.
+- **You're not sure:** tap **Not sure? Take a photo** → photo → where it is → the Pl@ntNet AI identifies it and we check Wisconsin's invasive list → report.
+
+The report screen shows the plant and the exact spot, with a **Copy details** button, then opens the **DNR's official report page**. The app never sends anything to the DNR by itself.
 
 ```
  📱 app ──photo──► 🔒 plant helper (Cloudflare, holds the secret key) ──► 🌿 Pl@ntNet AI
@@ -22,12 +26,15 @@ The Pl@ntNet key is stored **only** in Cloudflare, as the `PLANTNET_KEY` secret 
 
 ## Using the app
 
-| Step | What you see | What you do |
+| Screen | What you see | What you do |
 |---|---|---|
-| 1. Photo | A short welcome note, then **📷 Take photo** / **🖼️ My photos** | Take or pick a clear, close photo. No plant nearby? Tap **🧪 No plant nearby? Try a sample**. |
-| 2. Where is it? | A map of Wisconsin | Tap **📍 Find me** (GPS), or tap the map. If the photo has GPS saved inside, the pin drops by itself. |
-| 3. What plant is it? | "Asking the plant AI…", then a card: **⚠️ Possible invasive plant!**, **✅ Not on Wisconsin's invasive list**, or **🤔 The AI isn't sure**, plus the AI's top 3 guesses | Read the card. Dangerous plants show a red **Don't touch!** warning. Tap **Learn more →**. |
-| 4. Learn more from the DNR | A big button to the DNR's page about that plant, and **📍 Where you found it** (coordinates + map link) | Tap the button to read the DNR's advice. To report the plant, use the DNR's **How to report** link. **🔁 Check another plant** starts over. |
+| Front page | **"Watch out for these invasive plants! If you see one, report it."** and 14 plant cards. Each card has a photo, a Prohibited/Restricted label, how to spot it, and a red **Don't touch!** warning on dangerous plants | Scroll the cards. Know the plant? Tap **I found this →**. Not sure? Tap **📷 Not sure? Take a photo** (pinned at the bottom). |
+| Take a photo *(not-sure path only)* | **📷 Take photo** / **🖼️ My photos** | Take or pick a clear, close photo. |
+| Where is the plant? | A map of Wisconsin | Tap **📍 Find me** (GPS), or tap the map. If the photo has GPS saved inside, the pin drops by itself. |
+| What plant is it? *(not-sure path only)* | "Asking the plant AI…", then **⚠️ Possible invasive plant!**, **✅ Not on Wisconsin's invasive list**, or **🤔 The AI isn't sure**, plus the AI's top 3 guesses | Read the card, then tap **Next: Report it →**. |
+| Report it to the DNR | The plant, how you know (you picked it, or the AI's guess and how sure), the exact spot with a map link, and the date | Tap **📋 Copy details**, then **📮 Report on the DNR website** and paste them in. **🔁 Check another plant** goes back to the front page. |
+
+Each screen shows its step, like "Step 1 of 2" on the know-it path or "Step 1 of 4" on the photo path.
 
 The **ℹ️** button (top right) opens the **About** box: how to use the app, why the AI can be wrong, staying safe, where photos and locations go, and all sources and photo credits.
 
@@ -47,7 +54,7 @@ Team members can change the app from **any computer or Chromebook**, right on th
 
 **Change several files at once:** on the repository page, press the **`.`** key. A full code editor opens in your browser. When you're done, use the **Source Control** panel on the left to commit.
 
-**Add a sample photo:** open the `samples` folder → **Add file → Upload files**. Then add its block to `samples/results.json` (see "Add your own sample" below).
+**Change a front-page photo:** open the `photos` folder → **Add file → Upload files**, then point the plant's `photo` at it in `invasive-plants.json` (see "The front page" below).
 
 **Check your change:**
 - The **robot checker** runs on every change. Open the **Actions** tab: ✅ means all good. ❌ means something is broken. Click it to see the problem in plain words, like "Garlic mustard: category must be one of…" or "This file is broken (often a missing comma) … line 8 column 7".
@@ -55,7 +62,7 @@ Team members can change the app from **any computer or Chromebook**, right on th
 
 **Undo a mistake:** every change is saved. Open the file → **History** → click the version from before the mistake → **Raw** → copy it all, then paste it back with the ✏️ pencil and commit. Not sure what broke? Ask an adult; they can put any file back exactly as it was.
 
-**What still needs an adult:** the Pl@ntNet key and the plant helper on Cloudflare. Normal changes (plants, words, colors, samples, docs) never need them.
+**What still needs an adult:** the Pl@ntNet key and the plant helper on Cloudflare. Normal changes (plants, words, colors, photos, docs) never need them.
 
 ## Run it on a laptop
 
@@ -65,7 +72,7 @@ Team members can change the app from **any computer or Chromebook**, right on th
 4. To see it like a phone: press `Cmd+Option+I`, then click the phone icon.
 5. Press `Ctrl+C` in Terminal to stop.
 
-Before the plant helper is set up, tap a **sample** on the first screen. Samples work without the helper and without internet.
+The front page and the "I found this" path work even without the plant helper. Only the "Not sure? Take a photo" path needs it.
 
 ## One-time setup (an adult does this)
 
@@ -75,7 +82,7 @@ Setup happens once. After that, **nobody types a key on any phone.** Do the step
 1. Sign up at https://my.plantnet.org and confirm your email.
 2. Go to **Settings → API key** and copy the key. Keep it private: don't put it in the code, a chat, or an email.
 
-The free plan allows **500 plant checks per day**. Going back and forth between screens doesn't use extra checks, and samples use none.
+The free plan allows **500 plant checks per day**. Going back and forth between screens doesn't use extra checks, and the "I found this" path uses none.
 
 ### 2. Put the app on GitHub Pages (free `https://` website)
 Phone camera and GPS only work on secure `https://` pages. A laptop on Wi-Fi serves plain `http://` (like `http://192.168.1.5:8000`), and phones block the camera and GPS there. GitHub Pages gives a free `https://` address.
@@ -119,56 +126,46 @@ The plant helper is `plant-helper.js`: a tiny program that runs on Cloudflare, n
 - **Remaining risk:** a determined person could write a program that pretends to be our website and use the helper to identify plants. That uses up our 500 free checks for the day, and then the app says "We used up today's free plant checks." They still can't see the key, and there's no money involved on free plans. For extra protection, an adult can add a Cloudflare rate-limiting rule.
 - **Photos pass through Cloudflare** on their way to Pl@ntNet. The helper doesn't save them (you can read every line of `plant-helper.js`).
 
-## Learning more from the DNR (step 4)
+## Reporting (the last screen)
 
-The last screen sends people to the **Wisconsin DNR's own page about their plant**, for example [Garlic mustard](https://dnr.wisconsin.gov/topic/Invasives/fact/GarlicMustard). Each plant in `invasive-plants.json` has a `dnrPage` link. If the plant isn't on our list, the button goes to the DNR's main [invasive species page](https://dnr.wisconsin.gov/topic/Invasives).
+The app never sends anything to the DNR (no emails, no forms). The last screen gives people everything they need to report it **the DNR's own way**:
+- **The details to copy:** the plant (common + scientific name), how they know (picked from the list, or the AI's guess and how sure), latitude/longitude with a map link, and the date. **📋 Copy details** copies exactly what's shown.
+- **📮 Report on the DNR website** opens the DNR's official [Report invasive species](https://dnr.wisconsin.gov/topic/Invasives/report) page.
+- **🌐 Learn about …** opens the DNR's page about that plant (each plant in `invasive-plants.json` has a `dnrPage` link), or the DNR's main [invasive species page](https://dnr.wisconsin.gov/topic/Invasives) if it isn't on our list.
 
-The last screen also shows **where the plant was found** (coordinates and a map link), plus a link to the DNR's [Report invasive species](https://dnr.wisconsin.gov/topic/Invasives/report) page. That way, anyone who wants to report the plant can do it the DNR's own way, with the location ready.
+## The front page (watch list)
 
-**The app never sends anything to the DNR:** no emails and no forms. People decide for themselves whether to report.
+The front page shows the plants in `invasive-plants.json` that have a `frontPage` number, in that order. Today there are 14, chosen because they're the most common in Wisconsin or dangerous to touch:
+garlic mustard, common and glossy buckthorn, Amur honeysuckle (standing in for the bush honeysuckles), wild parsnip, purple loosestrife, Japanese knotweed, spotted knapweed, phragmites, Oriental bittersweet, multiflora rose, Japanese barberry, poison hemlock, and giant hogweed.
 
-## Demo mode (samples)
+Each front-page plant has these extra parts:
 
-On the first screen, **🧪 No plant nearby? Try a sample** opens a picker with 4 picture buttons: garlic mustard (invasive), wild parsnip (invasive, burns skin), golden Alexanders (its native look-alike), and common milkweed (native). Each one has:
-- **a real photo** from Wikimedia Commons (credits are in the app's ℹ️ About box and in `samples/results.json`), with its hidden data, including any GPS, removed;
-- **the real answer** the Pl@ntNet AI gave for that photo, saved on 2026-10-04;
-- **a location** at a public park or landmark.
+| Part | What it's for |
+|---|---|
+| `frontPage` | Its place on the front page (1 = first). Leave it out to hide the plant from the front page. The AI still checks it. |
+| `lookFor` | One or two short sentences on how to spot it, written from the plant's DNR page |
+| `photo` | Its photo in the `photos/` folder |
+| `photoCredit`, `photoCreditUrl` | Who took the photo and its license. These show in the ℹ️ About box. |
 
-Samples work with **no internet and no helper**. The app loads them as soon as it opens, so open it once with Wi-Fi before walking into a room without Wi-Fi, and keep the tab open. The fully offline option is the laptop (`python3 -m http.server`); only the map pictures need internet there.
+**The photos** are real photos from [Wikimedia Commons](https://commons.wikimedia.org) with free licenses (CC0 or CC BY), credited to each photographer. Their hidden data, including any GPS, was removed. To use **your own** photo: keep it under 1 MB, use a public place (never a home or school), and set `photoCredit` to `"Photo: our team"`.
 
-### Add your own sample
-1. Put **your own** photo in `samples/` (for example `samples/buckthorn.jpg`), under 1 MB. Phone photos can hide GPS inside, so take a screenshot of the photo, or use a public place.
-2. Run it through the real app once and note the AI's guesses.
-3. In `samples/results.json`, copy a block and change it:
-   ```json
-   {
-     "name": "Buckthorn",
-     "photo": "buckthorn.jpg",
-     "location": { "lat": 43.4194, "lon": -89.7329 },
-     "guesses": [
-       { "scientificName": "Rhamnus cathartica", "commonName": "Common buckthorn", "score": 0.88 }
-     ],
-     "credit": "Photo: our team",
-     "creditUrl": "https://github.com/USERNAME/REPO"
-   }
-   ```
-4. **Location:** use a public place like a park, never a home or school.
+**Without internet:** once the app has opened, the front page and the "I found this" path keep working with no internet. Only the map pictures and the plant AI need internet.
 
 ## Files
 
 | File | What it does |
 |---|---|
-| `index.html` | The four screens (Photo → Location → What plant is it? → Learn more) plus the About box and sample picker |
+| `index.html` | The screens (front page, Take a photo, Where is it?, What plant is it?, Report) plus the About box |
 | `style.css` | Colors, big buttons, phone layout |
 | `app.js` | Everything the app does, in 10 labeled sections |
 | `invasive-plants.json` | The Wisconsin invasive plant list |
 | `plant-helper.js` | The plant helper that runs on Cloudflare and keeps the key secret |
-| `samples/` | Sample photos and `results.json` (saved real AI answers + photo credits) |
+| `photos/` | The 14 front-page plant photos |
 | `README.md` | This file |
 | `EXPLAIN.md` | Kid-friendly explanation and judge Q&A |
 | `claude.md` | Rules for the AI coding assistant that helped build the app |
 | `.gitignore` | Files that should never be uploaded to GitHub |
-| `.github/workflows/check.yml` | The robot checker: GitHub runs it on every change to catch typos, broken lists, missing photos, and pasted keys |
+| `.github/workflows/check.yml` | The robot checker: GitHub runs it on every change to catch typos, a broken plant list, missing front-page photos or credits, and pasted keys |
 
 ## Libraries and services we use
 
@@ -179,7 +176,7 @@ Samples work with **no internet and no helper**. The app loads them as soon as i
 | [Leaflet](https://leafletjs.com/) 1.9.4 | Draws the map | cdnjs.cloudflare.com |
 | [exifr](https://github.com/MikeKovarik/exifr) 7.1.3 | Reads GPS saved inside photos | cdn.jsdelivr.net |
 | [OpenStreetMap](https://www.openstreetmap.org/copyright) | Map pictures (tiles) | tile.openstreetmap.org |
-| [Wikimedia Commons](https://commons.wikimedia.org) | Sample photos (CC0 and CC BY 4.0) | stored in `samples/` |
+| [Wikimedia Commons](https://commons.wikimedia.org) | Front-page plant photos (CC0 and CC BY) | stored in `photos/` |
 
 Each library has an `integrity` fingerprint in `index.html`. The browser refuses the file if anyone changed it, so if you upgrade a library, update its fingerprint too.
 
@@ -194,7 +191,7 @@ Each library has an `integrity` fingerprint in `index.html`. The browser refuses
 
 **How matching works:** we compare only the first two words of the scientific name (genus + species), ignoring capital letters and the hybrid sign `×`. So `Lonicera × bella Zabel` matches `lonicera x bella`. We also check `otherNames`, because scientists sometimes rename plants. For example, NR 40 says *Fallopia japonica*, but Pl@ntNet says *Reynoutria japonica*.
 
-**When we say "possible invasive":** if any of the AI's top 3 guesses is on the list **and** the AI is at least 20% sure about that guess. Below 20%, we say "The AI isn't sure." Either way, **Learn more** takes you to the DNR's website.
+**When we say "possible invasive":** if any of the AI's top 3 guesses is on the list **and** the AI is at least 20% sure about that guess. Below 20%, we say "The AI isn't sure." Either way, you can still report it.
 
 ### Add a plant
 1. Find it in NR 40.04(2)(b) (prohibited) or NR 40.05(2)(b) (restricted). If it's in both, use `depends-on-county`. Then find its page on the DNR website (they look like `https://dnr.wisconsin.gov/topic/Invasives/fact/PlantName`).
@@ -211,7 +208,8 @@ Each library has an `integrity` fingerprint in `index.html`. The browser refuses
    ```
 3. If it's dangerous to touch or eat, add `"warning": "Don't touch! ..."`.
 4. Put the plant's other scientific names in `otherNames`. The name Pl@ntNet uses is the most important one.
-5. Reload the app. If something breaks, paste the file into https://jsonlint.com to find the missing comma.
+5. To show it on the front page too, add `frontPage`, `lookFor`, `photo`, `photoCredit` and `photoCreditUrl` (see "The front page" above).
+6. Reload the app. If something breaks, paste the file into https://jsonlint.com to find the missing comma.
 
 ### Known limits
 - **Phragmites:** a native kind has the same genus + species, so it also shows as "possible". DNR experts make the final call.

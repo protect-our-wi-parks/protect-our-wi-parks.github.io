@@ -4,32 +4,34 @@
 
 Invasive plants are plants from other places that spread fast and crowd out Wisconsin's own plants. The Wisconsin DNR (Department of Natural Resources) wants people to report them. But most people don't know what they're looking at, or how to report it.
 
-Our app helps: **take a photo → find out if it might be invasive → learn about it from the DNR.**
+Our app's front page says **"Watch out for these invasive plants! If you see one, report it."** It shows 14 of Wisconsin's most common invasive plants, each with a photo and tips on how to spot it.
 
 ## How the information flows
 
+There are two paths:
+
 ```
- 📷 Photo ──► 📍 Where is it? ──► 🤖 AI guesses the plant ──► 📋 Is it on Wisconsin's list? ──► 🌐 DNR's page
- (on phone)   (on phone)          (photo → our helper →        (checked on the phone)            about that plant
-                                   Pl@ntNet)
+ KNOW IT (100% sure)   🌿 Pick it from the list ──► 📍 Where is it? ──────────────────────────────────► 📮 Report it
+
+ NOT SURE              📷 Take a photo ──► 📍 Where is it? ──► 🤖 AI guesses ──► 📋 On Wisconsin's list? ──► 📮 Report it
+                                                               (photo → our helper → Pl@ntNet)
 ```
 
-1. **Photo:** you take a picture, or pick one from your phone.
-2. **Location:** the phone's GPS finds you, or the photo already knows where it was taken, or you tap the map.
-3. **AI:** we shrink the photo and send it to our **plant helper**, which passes it to **Pl@ntNet**, a plant-identifying AI made by scientists. It sends back its 3 best guesses and how sure it is about each.
-4. **List check:** we look up each guess in our list of 30 Wisconsin invasive plants.
-5. **Learn more:** a button opens the DNR's own page about your plant. We also show where you found it, in case you want to report it to the DNR.
+1. **Know the plant?** Find its card on the front page and tap **I found this**. No photo and no AI needed, because you already know.
+2. **Not sure?** Tap **Take a photo**. We shrink the photo and send it through our **plant helper** to **Pl@ntNet**, a plant-identifying AI made by scientists. It sends back its 3 best guesses, and we check each one against our list of 30 Wisconsin invasive plants.
+3. **Where is it?** The phone's GPS finds you, the photo already knows where it was taken, or you tap the map.
+4. **Report it:** we show the plant, how you know, and the exact spot, so you can copy them. Then a button opens the DNR's official report page. **You** send the report. The app never sends anything by itself.
 
 ## What each file does
 
 | File | In kid words |
 |---|---|
-| `index.html` | The skeleton: all four screens are on one page, and we show one at a time. |
+| `index.html` | The skeleton: all the screens (front page, photo, map, AI answer, report) are on one page, and we show one at a time. |
 | `style.css` | The clothes: colors, big buttons, and making it fit on any phone. |
 | `app.js` | The brain: what happens when you tap each button. It has 10 labeled sections. |
 | `invasive-plants.json` | Our list of 30 Wisconsin invasive plants, copied from the state law called NR 40. |
 | `plant-helper.js` | The plant helper. It runs in the cloud (on Cloudflare), keeps the AI key locked up, and passes photos to Pl@ntNet. |
-| `samples/` | 4 real plant photos with the AI's real saved answers, so our demo works without Wi-Fi. |
+| `photos/` | The 14 plant photos on the front page. |
 | `README.md` | Instructions for grown-ups: running the app, putting it online, adding plants. |
 | `EXPLAIN.md` | This file! |
 | `claude.md` | Rules we gave the AI coding helper that helped us build the app (like "keep it simple" and "never put names in the code"). |
@@ -51,26 +53,26 @@ Our app helps: **take a photo → find out if it might be invasive → learn abo
 Pl@ntNet learned from millions of plant photos that scientists and regular people labeled. It looks for patterns, like leaf shape and flower color, and compares them to what it learned. Then it gives its top guesses and a score for how sure it is.
 
 **What if it's wrong?**
-It can be wrong! That's why we always say "**possible** invasive plant" and show how sure the AI is. If it's less than 20% sure, we say "The AI isn't sure." A real expert at the DNR makes the final decision. Whatever the app says, **Learn more** takes you to the DNR's website, and you can report any plant there.
+It can be wrong! That's why we always say "**possible** invasive plant" and show how sure the AI is. If it's less than 20% sure, we say "The AI isn't sure." A real expert at the DNR makes the final decision. And if you already know the plant, you don't need the AI at all: pick it from the list on the front page.
 
 **Where does my photo go?**
-It stays on your phone until the AI step. Then a smaller copy goes through our plant helper to Pl@ntNet to be identified. The helper only passes it along and saves nothing (you can read all of its code in `plant-helper.js`). There's no database, so we never keep your photo. Your location stays on your phone. We show it to you on the last screen, in case you want to report the plant to the DNR yourself. (Drawing the map means downloading map pictures of your area from OpenStreetMap.)
+If you pick a plant from the list, there's no photo at all. If you use the AI, the photo stays on your phone until the AI step. Then a smaller copy goes through our plant helper to Pl@ntNet to be identified. The helper only passes it along and saves nothing (you can read all of its code in `plant-helper.js`). There's no database, so we never keep your photo. Your location stays on your phone. We show it to you on the last screen so you can copy it into your report. (Drawing the map means downloading map pictures of your area from OpenStreetMap.)
 
 **Why no login?**
 A login means storing people's names and passwords, and keeping those safe is a big job. Our app doesn't need to know who you are to help find invasive plants, so we left it out. Safer and simpler!
 
 **Why don't you send reports to the DNR?**
-Sending reports means the DNR gets emails from every practice run and every wrong guess. Instead, we take people to the DNR's own page about their plant, so they learn the facts first. If they still want to report it, the DNR's website shows them the official way.
+If the app sent reports by itself, the DNR could get reports from every practice run and every wrong guess. Instead, the app gets everything ready (the plant, how you know, and the exact spot) and opens the DNR's official report page. A person checks it and sends it the DNR's own way.
 
 **How does this help the DNR?**
-Our app sends people to the DNR's own page about their plant, so they learn the DNR's real advice: how to spot it, why it's a problem, and how to get rid of it. The app shows where the plant was found, and links to the DNR's "Report invasive species" page, so anyone who wants to report it can do it the DNR's way. Our app never sends anything by itself.
+More people learn what invasive plants look like, from the front page. And when someone spots one, they can report it with the exact location in a couple of taps. The DNR gets better reports, and the most dangerous plants (like giant hogweed) are clearly marked "report it right away."
 
 **How would you make it better?**
 - Add more plants to the list (the law lists over 100!)
 - Figure out the county, so we can say "prohibited" or "restricted" exactly
 - Work fully offline, even after the phone closes the app
 - Help people send a report straight to the DNR, with the photo and location filled in
-- Add our own team photos as samples
+- Use our own team photos on the front page
 - Work in other states, using their invasive plant lists
 
 **Bonus: How do you keep the AI key safe?**
@@ -79,5 +81,8 @@ Our code is public on GitHub, so the key can't go there, because anyone could co
 **Bonus: How do you change the app?**
 Right on the GitHub website, from any computer. We click a file, click the pencil, make the change, and save. A robot checks our work for mistakes, and the live app updates by itself in about a minute.
 
-**Bonus: Where do the sample photos come from?**
-They're real photos from Wikimedia Commons that photographers shared for anyone to use. We credit each photographer in the app's ℹ️ About box. We removed hidden data (like GPS) from the photos, and saved the AI's real answers so the demo works without Wi-Fi.
+**Bonus: Where do the plant photos come from?**
+They're real photos from Wikimedia Commons that photographers shared for anyone to use. We credit each photographer in the app's ℹ️ About box, and we removed hidden data (like GPS) from the photos.
+
+**Bonus: Why show a list of plants first?**
+If you already know the plant, you don't need an AI: picking it from the list is 100% certain and faster. The list also teaches people what to watch for before they ever see one. The AI is there for when you're not sure.

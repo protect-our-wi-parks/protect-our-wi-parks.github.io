@@ -5,7 +5,7 @@ A FIRST LEGO League team (kids ages 9–14) building their Innovation Project. T
 
 ## Standing rules
 - Plain HTML, CSS, JavaScript only. No frameworks, no npm, no build step.
-- Keep it to about 5 files plus /samples. Ask before adding a new file.
+- Keep it to about 5 files plus /photos. Ask before adding a new file.
 - Every function is short and has a plain-English comment above it.
 - Explain each choice in 1–2 sentences a kid could repeat.
 - Work in small steps. After each step, say exactly how to test it.
@@ -14,7 +14,7 @@ A FIRST LEGO League team (kids ages 9–14) building their Innovation Project. T
 ## Safety and privacy
 - This repo will be PUBLIC (free GitHub Pages hosting). Never put names, school, team name, addresses, or anyone's location in code, comments, commits, or sample data.
 - Never commit API keys. The Pl@ntNet key lives only in Cloudflare, as the `PLANTNET_KEY` secret of the `plant-helper` worker. Explain where the key lives and its risk.
-- The app never sends anything to the DNR (no email, no forms). Step 4 links to the DNR's own page about the plant; people report through the DNR's own channel if they choose.
+- The app never sends anything to the DNR (no email, no forms). The report screen shows the details to copy and opens the DNR's official report page; people report through the DNR's own channel.
 
 ## Running it
 - Local: `python3 -m http.server` then open http://localhost:8000

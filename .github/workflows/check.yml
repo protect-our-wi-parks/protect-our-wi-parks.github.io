@@ -22,7 +22,7 @@ jobs:
       - name: Check plant-helper.js for typos
         run: node --check --input-type=module < plant-helper.js
 
-      - name: Check the plant list, the samples, and that no secret key was pasted in
+      - name: Check the plant list, the front-page plants, and that no secret key was pasted in
         run: |
           node <<'EOF'
           const fs = require("fs");
@@ -64,19 +64,20 @@ jobs:
           }
           if (list) console.log(`Checked ${list.plants.length} plants.`);
 
-          // The samples: every sample needs a photo that really exists.
-          const samples = readJson("samples/results.json");
-          for (const s of (samples && samples.samples) || []) {
-            const name = s.name || "a sample";
-            if (!s.photo || !fs.existsSync("samples/" + s.photo)) problem("samples/results.json", `${name}: the photo "samples/${s.photo}" is missing.`);
-            if (!s.location || typeof s.location.lat !== "number" || typeof s.location.lon !== "number") problem("samples/results.json", `${name}: location needs numbers for lat and lon.`);
-            if (!Array.isArray(s.guesses) || s.guesses.length === 0) problem("samples/results.json", `${name}: guesses must be a list with at least one guess.`);
-            if (!s.credit) problem("samples/results.json", `${name}: credit (who took the photo) is missing.`);
+          // The front page: every front-page plant needs its place, a "Look for" line, a photo that exists, and a credit.
+          const places = new Set();
+          for (const plant of ((list && list.plants) || []).filter((p) => "frontPage" in p)) {
+            const name = plant.commonName || "a plant";
+            if (!Number.isInteger(plant.frontPage) || places.has(plant.frontPage)) problem("invasive-plants.json", `${name}: frontPage must be a whole number that no other plant uses.`);
+            places.add(plant.frontPage);
+            if (!plant.lookFor) problem("invasive-plants.json", `${name}: "lookFor" (how to spot it) is missing.`);
+            if (!plant.photo || !fs.existsSync(plant.photo)) problem("invasive-plants.json", `${name}: the photo "${plant.photo}" is missing. Upload it to the photos folder.`);
+            if (!plant.photoCredit || !plant.photoCreditUrl) problem("invasive-plants.json", `${name}: photoCredit and photoCreditUrl (who took the photo) are needed.`);
           }
-          if (samples) console.log(`Checked ${samples.samples.length} samples.`);
+          console.log(`Checked ${places.size} front-page plants.`);
 
           // Safety: a Pl@ntNet key must never be in our public code. It belongs only in Cloudflare.
-          for (const file of ["app.js", "index.html", "style.css", "plant-helper.js", "invasive-plants.json", "samples/results.json", "README.md", "EXPLAIN.md"]) {
+          for (const file of ["app.js", "index.html", "style.css", "plant-helper.js", "invasive-plants.json", "README.md", "EXPLAIN.md"]) {
             if (/2b10[A-Za-z0-9]{18,}/.test(fs.readFileSync(file, "utf8"))) problem(file, "This looks like a Pl@ntNet key! Remove it right away and tell an adult to make a new key. Keys only go in Cloudflare.");
           }
 
