@@ -26,8 +26,11 @@ body {
   flex-direction: column;
 }
 
-/* The green bar at the top. Extra padding keeps it clear of the phone's notch. */
+/* The green bar at the top. It stays put while the page scrolls. Extra padding keeps it clear of the phone's notch. */
 header {
+  position: sticky;
+  top: 0;
+  z-index: 2;
   display: flex;
   align-items: center;
   gap: 8px;
@@ -100,7 +103,91 @@ main > section h2 {
   font-size: 17px;
 }
 
-/* The grid of plant tiles on the front page: about 3 across on most phones. */
+/* The two big choices on the front page. */
+.choices {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin-bottom: 8px;
+}
+
+.choice {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 6px;
+  padding: 16px;
+  background: white;
+  border: 2px solid var(--green);
+  border-radius: 16px;
+  color: var(--text);
+  text-align: left;
+}
+
+.choice strong {
+  color: var(--green-dark);
+  font-size: 22px;
+}
+
+.choice > span:not(.choice-photos) {
+  color: var(--gray);
+  font-size: 17px;
+}
+
+/* A few small round plant photos on the "I know the plant" button. */
+.choice-photos {
+  display: flex;
+  gap: 6px;
+}
+
+.choice-photos img {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+/* The plant list: a pop-up page that fills the screen. */
+#plant-list {
+  box-sizing: border-box; /* the padding goes inside the 100% width, so nothing spills off the screen */
+  width: 100%;
+  max-width: 600px;
+  height: 100dvh;
+  max-height: 100dvh;
+  margin: 0 auto;
+  padding: 0 16px 16px;
+  border-radius: 0;
+  overflow-y: auto;
+}
+
+/* The plant list's title and Close button stay at the top while you scroll. */
+.page-top {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin: 0 -16px 8px;
+  padding: 10px 16px;
+  padding-top: max(10px, env(safe-area-inset-top));
+  background: var(--green);
+  color: white;
+}
+
+.page-top h2 {
+  margin: 0;
+  font-size: 21px;
+}
+
+.page-top .small {
+  min-height: 44px;
+  padding: 0 14px;
+  white-space: nowrap;
+}
+
+/* The grid of plant tiles on the plant list page: about 3 across on most phones. */
 .plant-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(86px, 1fr));

@@ -15,8 +15,10 @@
           integrity="sha384-NElt3Op+9NBMCYaef5HxeJmU4Xeard/Lku8ek6hoPTvYkQPh3zLIrJP7KiRocsxO" crossorigin="anonymous" defer></script>
   <script src="https://cdn.jsdelivr.net/npm/exifr@7.1.3/dist/lite.umd.js"
           integrity="sha384-KRanV2NRwHPanp7iM6nlLQC5jPCTscSYMko30dLJHzNXJaUNtcucWv+SOi3jV3PE" crossorigin="anonymous" defer></script>
-  <link rel="stylesheet" href="style.css">
-  <script src="app.js" defer></script>
+  <!-- The ?v= number is a version sticker. When you change style.css or app.js, add 1 to it (in both places),
+       so phones download the new file instead of reusing an old saved copy. -->
+  <link rel="stylesheet" href="style.css?v=4">
+  <script src="app.js?v=4" defer></script>
 </head>
 <body>
   <header>
@@ -25,23 +27,28 @@
   </header>
 
   <main>
-    <!-- Front page: the watch list. Tap a plant to see it up close and report it. Not sure? Take a photo. -->
+    <!-- Front page: two big choices. The plants themselves are on a pop-up page, so this page stays short. -->
     <section id="screen-home">
       <div class="hero">
         <h2>Watch out for these invasive plants!</h2>
-        <p>If you see one, report it. Tap a plant to see how to spot it.</p>
-        <button class="link-button" id="home-about">How does this app work?</button>
+        <p>If you see one, report it to the Wisconsin DNR.</p>
       </div>
-      <div id="plant-grid" class="plant-grid"></div>
-      <p class="hint">These are 14 of the most common invasive plants in Wisconsin.
-        <a href="https://dnr.wisconsin.gov/topic/Invasives/RegulatedSpecies" target="_blank" rel="noopener">See every regulated species on the DNR website</a>.</p>
-      <div class="actions">
-        <button class="big" id="photo-start">📷 Not sure? Take a photo</button>
+      <div class="choices">
+        <button class="choice" id="open-plant-list">
+          <span id="choice-photos" class="choice-photos"></span>
+          <strong>🌿 I know the plant</strong>
+          <span>See Wisconsin's 14 most common invasive plants. Pick yours and report it.</span>
+        </button>
+        <button class="choice" id="photo-start">
+          <strong>📷 Not sure what it is?</strong>
+          <span>Take a photo and our plant AI will help.</span>
+        </button>
       </div>
+      <p><button class="link-button" id="home-about">How does this app work?</button></p>
     </section>
 
     <!-- Take or pick a photo (only when you're not sure what the plant is) -->
-    <section id="screen-photo">
+    <section id="screen-photo" hidden>
       <p class="step"></p>
       <h2>Take a photo of the plant</h2>
       <p id="photo-tip">Tap <strong>📷 Take photo</strong>. Get close and show the leaves clearly.</p>
@@ -62,7 +69,7 @@
     </section>
 
     <!-- Where is the plant? -->
-    <section id="screen-location">
+    <section id="screen-location" hidden>
       <p class="step"></p>
       <h2>Where is the plant?</h2>
       <p id="location-tip">Standing next to it? Tap <strong>📍 Find me</strong>. Or tap the map where the plant is.</p>
@@ -77,7 +84,7 @@
     </section>
 
     <!-- What plant is it? (the plant AI's answer) -->
-    <section id="screen-result">
+    <section id="screen-result" hidden>
       <p class="step"></p>
       <h2>What plant is it?</h2>
       <p id="result-tip" aria-live="polite"></p>
@@ -96,7 +103,7 @@
     </section>
 
     <!-- Report it to the DNR: copy the details, then use the DNR's own report page -->
-    <section id="screen-report">
+    <section id="screen-report" hidden>
       <p class="step"></p>
       <h2>Report it to the DNR</h2>
       <p id="report-tip"></p>
@@ -118,6 +125,18 @@
     </section>
   </main>
 
+  <!-- The plant list: a pop-up page with all the front-page plants as photo tiles. -->
+  <dialog id="plant-list">
+    <div class="page-top">
+      <h2>Pick the plant you found</h2>
+      <form method="dialog"><button class="small" value="close">✕ Close</button></form>
+    </div>
+    <p class="hint">Tap a plant to see how to spot it. Red border = prohibited. ⚠️ = don't touch.</p>
+    <div id="plant-grid" class="plant-grid"></div>
+    <p class="hint">These are 14 of the most common invasive plants in Wisconsin.
+      <a href="https://dnr.wisconsin.gov/topic/Invasives/RegulatedSpecies" target="_blank" rel="noopener">See every regulated species on the DNR website</a>.</p>
+  </dialog>
+
   <!-- The pop-out card for one plant. It opens when you tap a plant on the front page. -->
   <dialog id="plant-sheet">
     <div id="sheet-content" class="sheet-content"></div>
@@ -138,8 +157,8 @@
 
       <h3>How to use it</h3>
       <ul>
-        <li><strong>You know the plant:</strong> tap it on the front page, then <strong>I found this: report it</strong>. Show where it is, then report it.</li>
-        <li><strong>You're not sure:</strong> tap <strong>Not sure? Take a photo</strong>. The Pl@ntNet AI guesses the plant,
+        <li><strong>You know the plant:</strong> tap <strong>I know the plant</strong>, pick it from the list, then <strong>I found this: report it</strong>. Show where it is, then report it.</li>
+        <li><strong>You're not sure:</strong> tap <strong>Not sure what it is?</strong> and take a photo. The Pl@ntNet AI guesses the plant,
           we check Wisconsin's invasive list, then you can report it.</li>
         <li><strong>Reporting:</strong> we show the plant and the exact spot so you can copy them, then open the DNR's own report page.</li>
       </ul>

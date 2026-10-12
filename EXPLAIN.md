@@ -11,14 +11,14 @@ Our app's front page says **"Watch out for these invasive plants! If you see one
 There are two paths:
 
 ```
- KNOW IT (100% sure)   🌿 Tap it on the front page ► 📍 Where is it? ──────────────────────────────────► 📮 Report it
+ KNOW IT (100% sure)   🌿 Pick it from the list ──► 📍 Where is it? ──────────────────────────────────► 📮 Report it
 
  NOT SURE              📷 Take a photo ──► 📍 Where is it? ──► 🤖 AI guesses ──► 📋 On Wisconsin's list? ──► 📮 Report it
                                                                (photo → our helper → Pl@ntNet)
 ```
 
-1. **Know the plant?** Tap its photo on the front page. A card pops up with how to spot it and why it's a problem. Tap **I found this: report it**. No photo and no AI needed, because you already know.
-2. **Not sure?** Tap **Take a photo**. We shrink the photo and send it through our **plant helper** to **Pl@ntNet**, a plant-identifying AI made by scientists. It sends back its 3 best guesses, and we check each one against our list of 30 Wisconsin invasive plants.
+1. **Know the plant?** Tap **I know the plant**. A page pops up with photos of 14 invasive plants. Tap yours: a card shows how to spot it and why it's a problem. Tap **I found this: report it**. No photo and no AI needed, because you already know.
+2. **Not sure?** Tap **Not sure what it is?** and take a photo. We shrink the photo and send it through our **plant helper** to **Pl@ntNet**, a plant-identifying AI made by scientists. It sends back its 3 best guesses, and we check each one against our list of 30 Wisconsin invasive plants.
 3. **Where is it?** The phone's GPS finds you, the photo already knows where it was taken, or you tap the map.
 4. **Report it:** we show the plant, how you know, and the exact spot, so you can copy them. Then a button opens the DNR's official report page. **You** send the report. The app never sends anything by itself.
 

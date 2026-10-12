@@ -62,6 +62,7 @@ function openAbout() {
 function setUpButtons() {
   document.getElementById("about-button").addEventListener("click", openAbout);
   document.getElementById("home-about").addEventListener("click", openAbout);
+  document.getElementById("open-plant-list").addEventListener("click", openPlantList);
   document.getElementById("photo-start").addEventListener("click", startPhotoPath);
   document.getElementById("retry-button").addEventListener("click", identifyPhoto);
   document.getElementById("gps-button").addEventListener("click", findMe);
@@ -81,13 +82,21 @@ const BADGE_WORDS = {
   "depends-on-county": "Prohibited or restricted, depending on the county",
 };
 
-// Make a photo tile for each front-page plant, in order, and credit each photo in the About box.
+// Make a photo tile for each front-page plant on the plant list page, credit each photo in the About box,
+// and show a few small photos on the "I know the plant" button.
 function showPlantTiles() {
   const front = invasivePlants.filter((plant) => plant.frontPage).sort((a, b) => a.frontPage - b.frontPage);
   for (const plant of front) {
     document.getElementById("plant-grid").append(plantTile(plant));
     creditPhoto(plant);
   }
+  for (const plant of front.slice(0, 5)) addText(document.getElementById("choice-photos"), "img", "").src = plant.photo;
+}
+
+// Open the plant list page.
+function openPlantList() {
+  document.getElementById("plant-list").showModal();
+  document.getElementById("plant-list").scrollTop = 0;
 }
 
 // Build one small tile: a photo and the name. Tapping it opens the plant's pop-out card.
@@ -128,9 +137,10 @@ function openPlantCard(plant) {
   sheet.scrollTop = 0;
 }
 
-// "I found this" on the pop-out card: close the card and start the report.
+// "I found this" on the pop-out card: close the card and the plant list, and start the report.
 function reportShownPlant() {
   document.getElementById("plant-sheet").close();
+  document.getElementById("plant-list").close();
   startKnownPath(shownPlant);
 }
 
@@ -317,7 +327,7 @@ let invasivePlants = null;
 // Load the invasive plant list from our JSON file, then show the front-page cards.
 async function loadInvasiveList() {
   try {
-    const response = await fetch("invasive-plants.json");
+    const response = await fetch("invasive-plants.json", { cache: "no-cache" }); // always check for a newer list
     invasivePlants = (await response.json()).plants;
     showPlantTiles();
   } catch {
