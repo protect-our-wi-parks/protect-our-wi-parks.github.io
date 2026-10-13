@@ -4,7 +4,7 @@
 
 Invasive plants are plants from other places that spread fast and crowd out Wisconsin's own plants. The Wisconsin DNR (Department of Natural Resources) wants people to report them. But most people don't know what they're looking at, or how to report it.
 
-Our app's front page says **"Watch out for these invasive plants! If you see one, report it."** It shows 14 of Wisconsin's most common invasive plants, each with a photo and tips on how to spot it.
+Our app's front page says **"Watch out for these invasive plants! If you see one, report it to the Wisconsin DNR."** One tap away is a list of 14 of Wisconsin's most common invasive plants, each with a photo and tips on how to spot it.
 
 ## How the information flows
 
@@ -26,12 +26,12 @@ There are two paths:
 
 | File | In kid words |
 |---|---|
-| `index.html` | The skeleton: all the screens (front page, photo, map, AI answer, report) are on one page, and we show one at a time. |
+| `index.html` | The skeleton: all the screens (front page, photo, map, AI answer, report) plus the pop-up plant list are on one page, and we show one at a time. |
 | `style.css` | The clothes: colors, big buttons, and making it fit on any phone. |
 | `app.js` | The brain: what happens when you tap each button. It has 10 labeled sections. |
 | `invasive-plants.json` | Our list of 30 Wisconsin invasive plants, copied from the state law called NR 40. |
 | `plant-helper.js` | The plant helper. It runs in the cloud (on Cloudflare), keeps the AI key locked up, and passes photos to Pl@ntNet. |
-| `photos/` | The 14 plant photos on the front page. |
+| `photos/` | The 14 plant photos on the plant list. |
 | `README.md` | Instructions for grown-ups: running the app, putting it online, adding plants. |
 | `EXPLAIN.md` | This file! |
 | `claude.md` | Rules we gave the AI coding helper that helped us build the app (like "keep it simple" and "never put names in the code"). |
@@ -65,14 +65,14 @@ A login means storing people's names and passwords, and keeping those safe is a 
 If the app sent reports by itself, the DNR could get reports from every practice run and every wrong guess. Instead, the app gets everything ready (the plant, how you know, and the exact spot) and opens the DNR's official report page. A person checks it and sends it the DNR's own way.
 
 **How does this help the DNR?**
-More people learn what invasive plants look like, from the front page. And when someone spots one, they can report it with the exact location in a couple of taps. The DNR gets better reports, and the most dangerous plants (like giant hogweed) are clearly marked "report it right away."
+More people learn what invasive plants look like, from the plant list. And when someone spots one, they can report it with the exact location in a couple of taps. The DNR gets better reports, and the most dangerous plants (like giant hogweed) are clearly marked "report it right away."
 
 **How would you make it better?**
 - Add more plants to the list (the law lists over 100!)
 - Figure out the county, so we can say "prohibited" or "restricted" exactly
 - Work fully offline, even after the phone closes the app
 - Help people send a report straight to the DNR, with the photo and location filled in
-- Use our own team photos on the front page
+- Use our own team photos on the plant list
 - Work in other states, using their invasive plant lists
 
 **Bonus: How do you keep the AI key safe?**

@@ -1,6 +1,6 @@
 # Invasive Plant Reporter
 
-A phone-friendly web app for a FIRST LEGO League Innovation Project. The front page says **"Watch out for these invasive plants! If you see one, report it."** and shows 14 of Wisconsin's most common invasive plants. If you see one, the app helps you report it to the Wisconsin DNR.
+A phone-friendly web app for a FIRST LEGO League Innovation Project. The front page says **"Watch out for these invasive plants! If you see one, report it to the Wisconsin DNR."** One tap away is a list of 14 of Wisconsin's most common invasive plants, with photos and tips on how to spot them. If you see one, the app helps you report it to the DNR.
 
 **Two ways to report:**
 - **You know the plant (100% sure):** **🌿 I know the plant** → pick it on the plant list page → **I found this: report it** → show where it is → report. No photo, no AI.
@@ -57,7 +57,7 @@ Team members can change the app from **any computer or Chromebook**, right on th
 
 **Change several files at once:** on the repository page, press the **`.`** key. A full code editor opens in your browser. When you're done, use the **Source Control** panel on the left to commit.
 
-**Change a front-page photo:** open the `photos` folder → **Add file → Upload files**, then point the plant's `photo` at it in `invasive-plants.json` (see "The front page" below).
+**Change a front-page photo:** open the `photos` folder → **Add file → Upload files**, then point the plant's `photo` at it in `invasive-plants.json` (see "The plant list" below).
 
 **Check your change:**
 - The **robot checker** runs on every change. Open the **Actions** tab: ✅ means all good. ❌ means something is broken. Click it to see the problem in plain words, like "Garlic mustard: category must be one of…" or "This file is broken (often a missing comma) … line 8 column 7".
@@ -75,7 +75,9 @@ Team members can change the app from **any computer or Chromebook**, right on th
 4. To see it like a phone: press `Cmd+Option+I`, then click the phone icon.
 5. Press `Ctrl+C` in Terminal to stop.
 
-The front page and the "I found this" path work even without the plant helper. Only the "Not sure what it is?" photo path needs it.
+The plant list and the "I know the plant" path work even without the plant helper. Only the "Not sure what it is?" photo path needs it.
+
+**Page looks wrong or old after a change?** Press `Cmd+Shift+R` to reload without saved copies. (This is also why `index.html` has version numbers on `style.css` and `app.js`; see "Making changes on GitHub".)
 
 ## One-time setup (an adult does this)
 
@@ -136,39 +138,39 @@ The app never sends anything to the DNR (no emails, no forms). The last screen g
 - **📮 Report on the DNR website** opens the DNR's official [Report invasive species](https://dnr.wisconsin.gov/topic/Invasives/report) page.
 - **🌐 Learn about …** opens the DNR's page about that plant (each plant in `invasive-plants.json` has a `dnrPage` link), or the DNR's main [invasive species page](https://dnr.wisconsin.gov/topic/Invasives) if it isn't on our list.
 
-## The front page (watch list)
+## The plant list (watch list)
 
-The plant list page (opened with **🌿 I know the plant**) shows the plants in `invasive-plants.json` that have a `frontPage` number, in that order, as small photo tiles. Tapping a tile opens that plant's pop-out card. The first 5 also appear as small round photos on the **I know the plant** button. Today there are 14, chosen because they're the most common in Wisconsin or dangerous to touch:
+The plant list page (opened with **🌿 I know the plant** on the front page) shows the plants in `invasive-plants.json` that have a `frontPage` number, in that order, as small photo tiles. Tapping a tile opens that plant's pop-out card. The first 5 also appear as small round photos on the **I know the plant** button. Today there are 14, chosen because they're the most common in Wisconsin or dangerous to touch:
 garlic mustard, common and glossy buckthorn, Amur honeysuckle (standing in for the bush honeysuckles), wild parsnip, purple loosestrife, Japanese knotweed, spotted knapweed, phragmites, Oriental bittersweet, multiflora rose, Japanese barberry, poison hemlock, and giant hogweed.
 
-Each front-page plant has these extra parts:
+Each plant on the plant list has these extra parts:
 
 | Part | What it's for |
 |---|---|
-| `frontPage` | Its place on the front page (1 = first). Leave it out to hide the plant from the front page. The AI still checks it. |
+| `frontPage` | Its place on the plant list (1 = first; the first 5 also show on the **I know the plant** button). Leave it out to hide the plant from the list. The AI still checks it. |
 | `lookFor` | One or two short sentences on how to spot it, written from the plant's DNR page (shown on the pop-out card, with `why`) |
 | `photo` | Its photo in the `photos/` folder |
 | `photoCredit`, `photoCreditUrl` | Who took the photo and its license. These show in the ℹ️ About box. |
 
 **The photos** are real photos from [Wikimedia Commons](https://commons.wikimedia.org) with free licenses (CC0 or CC BY), credited to each photographer. Their hidden data, including any GPS, was removed. To use **your own** photo: keep it under 1 MB, use a public place (never a home or school), and set `photoCredit` to `"Photo: our team"`.
 
-**Without internet:** once the app has opened, the front page and the "I found this" path keep working with no internet. Only the map pictures and the plant AI need internet.
+**Without internet:** once the app has opened, the plant list and the "I know the plant" path keep working with no internet. Only the map pictures and the plant AI need internet.
 
 ## Files
 
 | File | What it does |
 |---|---|
-| `index.html` | The screens (front page, Take a photo, Where is it?, What plant is it?, Report) plus the About box |
+| `index.html` | The screens (front page, Take a photo, Where is it?, What plant is it?, Report), the plant list page, the plant details card, and the About box |
 | `style.css` | Colors, big buttons, phone layout |
 | `app.js` | Everything the app does, in 10 labeled sections |
 | `invasive-plants.json` | The Wisconsin invasive plant list |
 | `plant-helper.js` | The plant helper that runs on Cloudflare and keeps the key secret |
-| `photos/` | The 14 front-page plant photos |
+| `photos/` | The 14 photos on the plant list |
 | `README.md` | This file |
 | `EXPLAIN.md` | Kid-friendly explanation and judge Q&A |
 | `claude.md` | Rules for the AI coding assistant that helped build the app |
 | `.gitignore` | Files that should never be uploaded to GitHub |
-| `.github/workflows/check.yml` | The robot checker: GitHub runs it on every change to catch typos, a broken plant list, missing front-page photos or credits, and pasted keys |
+| `.github/workflows/check.yml` | The robot checker: GitHub runs it on every change to catch typos, a broken plant list, missing plant-list photos or credits, version numbers that don't match, and pasted keys |
 
 ## Libraries and services we use
 
@@ -211,7 +213,7 @@ Each library has an `integrity` fingerprint in `index.html`. The browser refuses
    ```
 3. If it's dangerous to touch or eat, add `"warning": "Don't touch! ..."`.
 4. Put the plant's other scientific names in `otherNames`. The name Pl@ntNet uses is the most important one.
-5. To show it on the front page too, add `frontPage`, `lookFor`, `photo`, `photoCredit` and `photoCreditUrl` (see "The front page" above).
+5. To show it on the front page too, add `frontPage`, `lookFor`, `photo`, `photoCredit` and `photoCreditUrl` (see "The plant list" above).
 6. Reload the app. If something breaks, paste the file into https://jsonlint.com to find the missing comma.
 
 ### Known limits
