@@ -254,18 +254,6 @@
       "why": "The non-native kind grows in tall, thick walls that take over wetlands, but a native kind looks similar, so experts need to check."
     },
     {
-      "scientificName": "Heracleum mantegazzianum",
-      "otherNames": [],
-      "commonName": "Giant hogweed",
-      "dnrPage": "https://dnr.wisconsin.gov/topic/Invasives/fact/GiantHogweed",
-      "lookFor": "A giant plant with leaves up to 5 feet wide and white flower umbrellas up to 20 inches across. Its stems have purple blotches.",
-      "photo": "photos/giant-hogweed.jpg",
-      "photoCredit": "Photo: Jean-Pol GRANDMONT, CC BY 3.0, Wikimedia Commons",
-      "photoCreditUrl": "https://commons.wikimedia.org/wiki/File:Heracleum_mantegazzianum_(Meise)_JPG1b.jpg",
-      "category": "prohibited",
-      "why": "This giant plant crowds out others, and its sap can cause bad burns on skin in sunlight.",
-      "warning": "Don't touch! The sap can cause serious burns and blisters in sunlight."
-    },
     {
       "scientificName": "Pueraria montana",
       "otherNames": ["Pueraria lobata"],
