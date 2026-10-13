@@ -29,19 +29,6 @@
       "why": "It grows into thick thickets that stay green late into fall and shade out wildflowers and young trees."
     },
     {
-      "scientificName": "Frangula alnus",
-      "otherNames": ["Rhamnus frangula"],
-      "commonName": "Glossy buckthorn",
-      "dnrPage": "https://dnr.wisconsin.gov/topic/Invasives/fact/GlossyBuckthorn",
-      "frontPage": 3,
-      "lookFor": "A shrub with shiny, smooth-edged leaves that stay green into fall, and pea-sized berries that turn from red to dark purple.",
-      "photo": "photos/glossy-buckthorn.jpg",
-      "photoCredit": "Photo: David Perez, CC BY 3.0, Wikimedia Commons",
-      "photoCreditUrl": "https://commons.wikimedia.org/wiki/File:Rhamnus_frangula_01_by-dpc.jpg",
-      "category": "restricted",
-      "why": "It forms thick thickets in wetlands and woods that crowd out native plants."
-    },
-    {
       "scientificName": "Lythrum salicaria",
       "otherNames": [],
       "commonName": "Purple loosestrife",
@@ -82,19 +69,6 @@
       "why": "It grows so strong it can push up through pavement, and its thick patches crowd out plants along rivers."
     },
     {
-      "scientificName": "Lonicera maackii",
-      "otherNames": [],
-      "commonName": "Amur honeysuckle",
-      "dnrPage": "https://dnr.wisconsin.gov/topic/Invasives/fact/AmurHoneysuckle",
-      "frontPage": 4,
-      "lookFor": "A bush with pointed leaves and sweet-smelling white flowers in spring that fade to yellow, then bright red berries in small clusters.",
-      "photo": "photos/amur-honeysuckle.jpg",
-      "photoCredit": "Photo: Alex Abair, CC BY 4.0, Wikimedia Commons",
-      "photoCreditUrl": "https://commons.wikimedia.org/wiki/File:Lonicera_maackii_647227872.jpg",
-      "category": "depends-on-county",
-      "why": "This tall bush honeysuckle grows into thick walls of shrubs that block sunlight from everything underneath."
-    },
-    {
       "scientificName": "Centaurea stoebe",
       "otherNames": ["Centaurea maculosa", "Centaurea biebersteinii"],
       "commonName": "Spotted knapweed",
@@ -106,35 +80,6 @@
       "photoCreditUrl": "https://commons.wikimedia.org/wiki/File:Centaurea_stoebe_-_Spotted_Knapweed_02.jpg",
       "category": "restricted",
       "why": "It takes over sunny, dry places like prairies and makes it hard for other plants to grow nearby."
-    },
-    {
-      "scientificName": "Euphorbia esula",
-      "otherNames": [],
-      "commonName": "Leafy spurge",
-      "dnrPage": "https://dnr.wisconsin.gov/topic/Invasives/fact/LeafySpurge",
-      "category": "restricted",
-      "why": "Its very deep roots make it almost impossible to pull out, and its milky sap can irritate skin."
-    },
-    {
-      "scientificName": "Ailanthus altissima",
-      "otherNames": [],
-      "commonName": "Tree of heaven",
-      "dnrPage": "https://dnr.wisconsin.gov/topic/Invasives/fact/TreeOfHeaven",
-      "category": "restricted",
-      "why": "It grows very fast, sends up new sprouts from its roots, and is a favorite food of the spotted lanternfly pest."
-    },
-    {
-      "scientificName": "Rosa multiflora",
-      "otherNames": [],
-      "commonName": "Multiflora rose",
-      "dnrPage": "https://dnr.wisconsin.gov/topic/Invasives/fact/MultifloraRose",
-      "frontPage": 11,
-      "lookFor": "A thorny, arching shrub with clusters of small white flowers in spring and small red rose hips that last all winter.",
-      "photo": "photos/multiflora-rose.jpg",
-      "photoCredit": "Photo: Tournasol7, CC BY 4.0, Wikimedia Commons",
-      "photoCreditUrl": "https://commons.wikimedia.org/wiki/File:Rosa_multiflora_var._adenochaeta_in_Lyon_BG_(2).jpg",
-      "category": "restricted",
-      "why": "It grows into huge thorny thickets that people and animals can't get through."
     },
     {
       "scientificName": "Hesperis matronalis",
