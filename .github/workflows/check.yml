@@ -47,7 +47,7 @@ jobs:
           // The plant list: every plant needs all its parts.
           const list = readJson("invasive-plants.json");
           const seen = new Set();
-          const categories = ["prohibited", "restricted", "depends-on-county"];
+          const categories = ["prohibited", "restricted", "depends-on-county", "not-regulated"];
           for (const plant of (list && list.plants) || []) {
             const name = plant.commonName || plant.scientificName || "a plant";
             if (!plant.scientificName || !plant.scientificName.includes(" ")) problem("invasive-plants.json", `${name}: scientificName needs two words, like "Alliaria petiolata".`);
@@ -55,7 +55,8 @@ jobs:
             if (!plant.commonName) problem("invasive-plants.json", `${name}: commonName is missing.`);
             if (!categories.includes(plant.category)) problem("invasive-plants.json", `${name}: category must be one of: ${categories.join(", ")}.`);
             if (!plant.why) problem("invasive-plants.json", `${name}: "why" (one sentence) is missing.`);
-            if (!/^https:\/\/dnr\.wisconsin\.gov\/topic\/Invasives\/fact\/[A-Za-z]+$/.test(plant.dnrPage || "")) problem("invasive-plants.json", `${name}: dnrPage should look like https://dnr.wisconsin.gov/topic/Invasives/fact/PlantName`);
+            if (plant.dnrPage && !/^https:\/\/dnr\.wisconsin\.gov\/topic\/Invasives\/fact\/[A-Za-z]+$/.test(plant.dnrPage)) problem("invasive-plants.json", `${name}: dnrPage should look like https://dnr.wisconsin.gov/topic/Invasives/fact/PlantName`);
+            if (plant.category === "not-regulated" && (!plant.infoPage || !plant.infoSource)) problem("invasive-plants.json", `${name}: a not-regulated plant needs infoPage (a link) and infoSource (who wrote it).`);
             for (const n of [plant.scientificName, ...(plant.otherNames || [])]) {
               const key = String(n).toLowerCase();
               if (seen.has(key)) problem("invasive-plants.json", `${n} is listed twice.`);
@@ -64,9 +65,17 @@ jobs:
           }
           if (list) console.log(`Checked ${list.plants.length} plants.`);
 
-          // The front page: every front-page plant needs its place, a "Look for" line, a photo that exists, and a credit.
+          // Groups: every kind in a group must be in the plant list.
+          const groups = (list && list.groups) || [];
+          for (const group of groups) {
+            if (!Array.isArray(group.members) || group.members.length === 0) problem("invasive-plants.json", `${group.commonName}: a group needs "members", a list of scientific names.`);
+            for (const m of group.members || []) if (!seen.has(String(m).toLowerCase())) problem("invasive-plants.json", `${group.commonName}: "${m}" is in the group but not in the plant list.`);
+            if (!group.why) problem("invasive-plants.json", `${group.commonName}: "why" (one sentence) is missing.`);
+          }
+
+          // The plant list cards (plants and groups): each needs its place, a "Look for" line, a photo that exists, and a credit.
           const places = new Set();
-          for (const plant of ((list && list.plants) || []).filter((p) => "frontPage" in p)) {
+          for (const plant of [...((list && list.plants) || []), ...groups].filter((p) => "frontPage" in p)) {
             const name = plant.commonName || "a plant";
             if (!Number.isInteger(plant.frontPage) || places.has(plant.frontPage)) problem("invasive-plants.json", `${name}: frontPage must be a whole number that no other plant uses.`);
             places.add(plant.frontPage);
