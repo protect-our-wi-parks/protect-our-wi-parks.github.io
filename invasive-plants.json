@@ -82,30 +82,6 @@
       "why": "It grows so strong it can push up through pavement, and its thick patches crowd out plants along rivers."
     },
     {
-      "scientificName": "Lonicera tatarica",
-      "otherNames": [],
-      "commonName": "Tatarian honeysuckle",
-      "dnrPage": "https://dnr.wisconsin.gov/topic/Invasives/fact/TatarianHoneysuckle",
-      "category": "restricted",
-      "why": "This bush honeysuckle leafs out early in spring and shades out the wildflowers below it."
-    },
-    {
-      "scientificName": "Lonicera morrowii",
-      "otherNames": [],
-      "commonName": "Morrow's honeysuckle",
-      "dnrPage": "https://dnr.wisconsin.gov/topic/Invasives/fact/MorrowsHoneysuckle",
-      "category": "restricted",
-      "why": "This bush honeysuckle forms dense shrubs that crowd out native plants in woods and fields."
-    },
-    {
-      "scientificName": "Lonicera × bella",
-      "otherNames": [],
-      "commonName": "Bell's honeysuckle",
-      "dnrPage": "https://dnr.wisconsin.gov/topic/Invasives/fact/BellsHoneysuckle",
-      "category": "restricted",
-      "why": "This bush honeysuckle spreads when birds eat its berries, and it shades out plants on the forest floor."
-    },
-    {
       "scientificName": "Lonicera maackii",
       "otherNames": [],
       "commonName": "Amur honeysuckle",
@@ -138,19 +114,6 @@
       "dnrPage": "https://dnr.wisconsin.gov/topic/Invasives/fact/LeafySpurge",
       "category": "restricted",
       "why": "Its very deep roots make it almost impossible to pull out, and its milky sap can irritate skin."
-    },
-    {
-      "scientificName": "Celastrus orbiculatus",
-      "otherNames": [],
-      "commonName": "Oriental bittersweet",
-      "dnrPage": "https://dnr.wisconsin.gov/topic/Invasives/fact/OrientalBittersweet",
-      "frontPage": 10,
-      "lookFor": "A climbing vine with round, glossy leaves. In fall, yellow-orange capsules all along the stem split open to show red-orange berries.",
-      "photo": "photos/oriental-bittersweet.jpg",
-      "photoCredit": "Photo: Cbaile19, CC0, Wikimedia Commons",
-      "photoCreditUrl": "https://commons.wikimedia.org/wiki/File:Celastrus_orbiculatus,_Montour_Trail,_2024-10-31.jpg",
-      "category": "restricted",
-      "why": "This vine wraps tightly around trees and can strangle them or pull them down."
     },
     {
       "scientificName": "Ailanthus altissima",
