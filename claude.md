@@ -10,6 +10,12 @@ A FIRST LEGO League team (kids ages 9–14) building their Innovation Project. T
 - Explain each choice in 1–2 sentences a kid could repeat.
 - Work in small steps. After each step, say exactly how to test it.
 - Ask before big changes. Don't rewrite working code just to tidy it.
+- When `app.js` or `style.css` changes, add 1 to BOTH version numbers in `index.html` (`style.css?v=N`, `app.js?v=N`) so browsers don't reuse old saved copies. The robot checker fails if they don't match.
+
+## How we ship changes
+- Build changes on a feature branch and open a pull request. Merge to `main` (that publishes the live site) only when the user says to deploy, then test the live site.
+- Team members also edit `main` directly on GitHub, so always pull before starting a branch.
+- Every push runs the robot checker (`.github/workflows/check.yml`).
 
 ## Safety and privacy
 - This repo will be PUBLIC (free GitHub Pages hosting). Never put names, school, team name, addresses, or anyone's location in code, comments, commits, or sample data.
