@@ -16,17 +16,17 @@
       "why": "Leafs out earlier than native species and produces toxic berries that alter soil chemistry, stopping native regeneration."
     },
     {
-      "scientificName": "Rhamnus cathartica",
+      "scientificName": "Alliaria petiolata",
       "otherNames": [],
-      "commonName": "Common buckthorn",
+      "commonName": "Garlic Mustard",
       "dnrPage": "https://dnr.wisconsin.gov/topic/Invasives/fact/CommonBuckthorn",
       "frontPage": 2,
       "lookFor": "A shrub or small tree whose leaves stay green late into fall. Clusters of black, pea-sized berries. Scratch the bark: it's orange inside.",
-      "photo": "photos/common-buckthorn.jpg",
+      "photo": "photos/garlic-mustard.jpg",
       "photoCredit": "Photo: Sigitas Juzėnas, CC BY 4.0, Wikimedia Commons",
       "photoCreditUrl": "https://commons.wikimedia.org/wiki/File:Rhamnus_cathartica_212020180.jpg",
       "category": "restricted",
-      "why": "It grows into thick thickets that stay green late into fall and shade out wildflowers and young trees."
+      "why": "Releases underground chemicals (allelopathy) that destroy beneficial soil fungi, effectively poisoning the roots of surrounding native plants."
     },
     {
       "scientificName": "Lythrum salicaria",
