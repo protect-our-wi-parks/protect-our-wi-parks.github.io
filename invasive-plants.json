@@ -29,6 +29,20 @@
       "why": "Releases underground chemicals (allelopathy) that destroy beneficial soil fungi, effectively poisoning the roots of surrounding native plants."
     },
     {
+      "scientificName": "Pastinaca sativa",
+      "otherNames": [],
+      "commonName": "Wild parsnip",
+      "dnrPage": "https://dnr.wisconsin.gov/topic/Invasives/fact/WildParsnip",
+      "frontPage": 5,
+      "lookFor": "Flat-topped clusters of tiny yellow flowers on tall stems, with leaves split into toothed leaflets. Grows along roadsides and in fields.",
+      "photo": "photos/wild-parsnip.jpg",
+      "photoCredit": "Photo: Силаева Татьяна Борисовна, CC0, Wikimedia Commons",
+      "photoCreditUrl": "https://commons.wikimedia.org/wiki/File:Pastinaca_sativa_146613743.jpg",
+      "category": "restricted",
+      "why": "It takes over roadsides and prairies, and its sap can burn skin when the sun hits it.",
+      "warning": "Don't touch! The sap can cause painful burns and blisters in sunlight."
+    },
+    {
       "scientificName": "Lythrum salicaria",
       "otherNames": [],
       "commonName": "Purple loosestrife",
