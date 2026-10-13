@@ -80,12 +80,37 @@ const BADGE_WORDS = {
   prohibited: "🚨 Prohibited: report it right away",
   restricted: "Restricted",
   "depends-on-county": "Prohibited or restricted, depending on the county",
+  "not-regulated": "Invasive, but not regulated by state law",
+  mixed: "A group of look-alike plants: see each kind below",
 };
+
+// The short label next to each kind of plant in a group.
+const STATUS_WORDS = {
+  prohibited: "prohibited",
+  restricted: "restricted",
+  "depends-on-county": "depends on county",
+  "not-regulated": "not regulated",
+};
+
+// Groups of look-alike plants (like bush honeysuckles) from invasive-plants.json. Each group gets one card.
+let plantGroups = [];
+
+// The plants in a group, looked up by their scientific names.
+function groupMembers(group) {
+  return group.members.map((name) => invasivePlants.find((plant) => plant.scientificName === name));
+}
+
+// A plant's category, or for a group: the category all its kinds share, or "mixed" if they differ.
+function categoryOf(item) {
+  if (!item.members) return item.category;
+  const categories = new Set(groupMembers(item).map((plant) => plant.category));
+  return categories.size === 1 ? [...categories][0] : "mixed";
+}
 
 // Make a photo tile for each front-page plant on the plant list page, credit each photo in the About box,
 // and show a few small photos on the "I know the plant" button.
 function showPlantTiles() {
-  const front = invasivePlants.filter((plant) => plant.frontPage).sort((a, b) => a.frontPage - b.frontPage);
+  const front = [...invasivePlants, ...plantGroups].filter((item) => item.frontPage).sort((a, b) => a.frontPage - b.frontPage);
   for (const plant of front) {
     document.getElementById("plant-grid").append(plantTile(plant));
     creditPhoto(plant);
@@ -102,7 +127,9 @@ function openPlantList() {
 // Build one small tile: a photo and the name. Tapping it opens the plant's pop-out card.
 function plantTile(plant) {
   const tile = document.createElement("button");
-  tile.className = "plant-tile " + plant.category;
+  const kinds = plant.members ? groupMembers(plant) : [plant];
+  tile.className = "plant-tile " + categoryOf(plant);
+  if (kinds.some((kind) => kind.category === "prohibited")) tile.classList.add("prohibited"); // red border
   const photo = addText(tile, "img", "");
   photo.src = plant.photo;
   photo.alt = ""; // the name under the photo already says what it is
@@ -124,17 +151,36 @@ function openPlantCard(plant) {
   photo.src = plant.photo;
   photo.alt = "Photo of " + plant.commonName;
   const name = addText(body, "h2", plant.commonName);
-  addText(body, "p", plant.scientificName, "science-name");
-  addText(body, "p", BADGE_WORDS[plant.category], "badge " + plant.category);
+  if (plant.scientificName) addText(body, "p", plant.scientificName, "science-name");
+  addText(body, "p", BADGE_WORDS[categoryOf(plant)], "badge " + categoryOf(plant));
   if (plant.warning) addText(body, "p", "⚠️ " + plant.warning, "warning");
   addText(addText(body, "p", ""), "strong", "Look for: ").after(plant.lookFor);
   addText(addText(body, "p", ""), "strong", "Why it's a problem: ").after(plant.why);
-  addLink(body, "More about it on the DNR website", plant.dnrPage);
+  if (plant.members) listKinds(body, plant);
+  else addMoreInfoLink(body, plant);
   const sheet = document.getElementById("plant-sheet");
   sheet.showModal();
   name.tabIndex = -1;
   name.focus(); // start at the top (the photo and name), not at the first button
   sheet.scrollTop = 0;
+}
+
+// On a group's card: list each kind with its label and its own "more info" link.
+function listKinds(body, group) {
+  addText(body, "h3", "Kinds in this group");
+  const list = addText(body, "ul", "", "kinds");
+  for (const kind of groupMembers(group)) {
+    const item = addText(list, "li", "");
+    addText(item, "strong", kind.commonName);
+    item.append(` (${kind.scientificName}), ${STATUS_WORDS[kind.category]}. `);
+    addMoreInfoLink(item, kind);
+  }
+}
+
+// Add the "more about it" link: the DNR page if there is one, or another trusted source.
+function addMoreInfoLink(parent, plant) {
+  if (plant.dnrPage) addLink(parent, "More about it on the DNR website", plant.dnrPage);
+  else if (plant.infoPage) addLink(parent, `More about it from ${plant.infoSource}`, plant.infoPage);
 }
 
 // "I found this" on the pop-out card: close the card and the plant list, and start the report.
@@ -328,7 +374,9 @@ let invasivePlants = null;
 async function loadInvasiveList() {
   try {
     const response = await fetch("invasive-plants.json", { cache: "no-cache" }); // always check for a newer list
-    invasivePlants = (await response.json()).plants;
+    const list = await response.json();
+    invasivePlants = list.plants;
+    plantGroups = list.groups || [];
     showPlantTiles();
   } catch {
     invasivePlants = null; // the result screen will say we couldn't check the list
@@ -445,6 +493,7 @@ const CATEGORY_WORDS = {
   prohibited: "PROHIBITED in Wisconsin. It's not common here yet, so telling the DNR about it really matters!",
   restricted: "RESTRICTED in Wisconsin. It's already found in parts of the state.",
   "depends-on-county": "Prohibited or restricted in Wisconsin, depending on the county.",
+  "not-regulated": "Invasive, but NOT regulated by Wisconsin law, so the DNR may not track it.",
 };
 
 // Change the tip at the top of the result screen.
@@ -564,22 +613,33 @@ function updateReportScreen() {
   document.getElementById("report-details").textContent = reportDetails();
   if (plantLocation) document.getElementById("spot-map").href = mapLink();
   const link = document.getElementById("dnr-link");
-  link.href = plant ? plant.dnrPage : DNR_INVASIVES_PAGE;
-  link.textContent = plant ? `🌐 Learn about ${plant.commonName} on the DNR website` : "🌐 Learn about invasive plants on the DNR website";
+  link.href = (plant && (plant.dnrPage || plant.infoPage)) || DNR_INVASIVES_PAGE;
+  link.textContent = !plant || plant.members ? "🌐 Learn about invasive plants on the DNR website"
+    : plant.dnrPage ? `🌐 Learn about ${plant.commonName} on the DNR website`
+    : plant.infoPage ? `🌐 Learn about ${plant.commonName} (${plant.infoSource})`
+    : "🌐 Learn about invasive plants on the DNR website";
 }
 
 // One sentence that says how sure we are about the plant.
 function reportTip() {
   const { kind, guess, plant } = decision || {};
-  if (kind === "known") return `You picked ${plant.commonName} from the list. Thanks for watching out!`;
-  if (kind === "invasive") return `The AI thinks this may be ${plant.commonName} (${percent(guess.score)} sure). The DNR will check.`;
+  const notTracked = plant && categoryOf(plant) === "not-regulated"
+    ? " This plant isn't regulated by state law, so the DNR may not track it. You can also tell whoever takes care of the land." : "";
+  if (kind === "known") return `You picked ${plant.commonName} from the list. Thanks for watching out!` + notTracked;
+  if (kind === "invasive") return `The AI thinks this may be ${plant.commonName} (${percent(guess.score)} sure). The DNR will check.` + notTracked;
   return "The AI didn't match this to our invasive list. If you still think it's invasive, you can report it anyway.";
+}
+
+// The plant's name for the report, like "Garlic mustard (Alliaria petiolata)". A group lists all its kinds.
+function plantNameForReport(plant) {
+  if (!plant.members) return `${plant.commonName} (${plant.scientificName})`;
+  return `${plant.commonName}, one of: ` + groupMembers(plant).map((kind) => `${kind.commonName} (${kind.scientificName})`).join(", ");
 }
 
 // The details to copy into a DNR report: the plant, how we know, where it is, and the date.
 function reportDetails() {
   const { kind, guess, plant } = decision || {};
-  const name = plant ? `${plant.commonName} (${plant.scientificName})` : guess ? `Not sure. AI's best guess: ${guess.commonName} (${guess.scientificName})` : "Not sure";
+  const name = plant ? plantNameForReport(plant) : guess ? `Not sure. AI's best guess: ${guess.commonName} (${guess.scientificName})` : "Not sure";
   const how = kind === "known" ? "I recognized it" : guess ? `Pl@ntNet AI guess, ${percent(guess.score)} sure` : "The AI couldn't tell";
   const lines = ["Possible invasive plant: " + name, "How I know: " + how];
   if (plantLocation) {

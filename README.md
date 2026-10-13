@@ -1,6 +1,6 @@
 # Invasive Plant Reporter
 
-A phone-friendly web app for a FIRST LEGO League Innovation Project. The front page says **"Watch out for these invasive plants! If you see one, report it to the Wisconsin DNR."** One tap away is a list of 14 of Wisconsin's most common invasive plants, with photos and tips on how to spot them. If you see one, the app helps you report it to the DNR.
+A phone-friendly web app for a FIRST LEGO League Innovation Project. The front page says **"Watch out for these invasive plants! If you see one, report it to the Wisconsin DNR."** One tap away is our team's watch list of 17 invasive plants (some are groups of look-alike plants), with photos and tips on how to spot them. If you see one, the app helps you report it to the DNR.
 
 **Two ways to report:**
 - **You know the plant (100% sure):** **🌿 I know the plant** → pick it on the plant list page → **I found this: report it** → show where it is → report. No photo, no AI.
@@ -29,7 +29,7 @@ The Pl@ntNet key is stored **only** in Cloudflare, as the `PLANTNET_KEY` secret 
 | Screen | What you see | What you do |
 |---|---|---|
 | Front page | **"Watch out for these invasive plants! If you see one, report it to the Wisconsin DNR."** and two big choices: **🌿 I know the plant** and **📷 Not sure what it is?** The green header stays at the top while you scroll | Tap the choice that fits. |
-| Plant list *(pop-up page)* | 14 small photo tiles, 3 across. A red border marks prohibited plants, and ⚠️ marks plants that are dangerous to touch | Tap a tile to open its **pop-out card**: big photo, label, how to spot it, why it's a problem, any **Don't touch!** warning, and a DNR link. Tap **📍 I found this: report it**. **✕ Close** goes back to the front page. |
+| Plant list *(pop-up page)* | 17 small photo tiles, 3 across. A red border means the plant (or a kind in its group) is prohibited, and ⚠️ marks plants that are dangerous to touch | Tap a tile to open its **pop-out card**: big photo, label, how to spot it, why it's a problem, any **Don't touch!** warning, and a "More about it" link. A **group** card (like bush honeysuckles) lists each kind with its own label and link. Tap **📍 I found this: report it**. **✕ Close** goes back to the front page. |
 | Take a photo *(not-sure path only)* | **📷 Take photo** / **🖼️ My photos** | Take or pick a clear, close photo. |
 | Where is the plant? | A map of Wisconsin | Tap **📍 Find me** (GPS), or tap the map. If the photo has GPS saved inside, the pin drops by itself. |
 | What plant is it? *(not-sure path only)* | "Asking the plant AI…", then **⚠️ Possible invasive plant!**, **✅ Not on Wisconsin's invasive list**, or **🤔 The AI isn't sure**, plus the AI's top 3 guesses | Read the card, then tap **Next: Report it →**. |
@@ -142,21 +142,46 @@ The plant helper is `plant-helper.js`: a tiny program that runs on Cloudflare, n
 The app never sends anything to the DNR (no emails, no forms). The last screen gives people everything they need to report it **the DNR's own way**:
 - **The details to copy:** the plant (common + scientific name), how they know (picked from the list, or the AI's guess and how sure), latitude/longitude with a map link, and the date. **📋 Copy details** copies exactly what's shown.
 - **📮 Report on the DNR website** opens the DNR's official [Report invasive species](https://dnr.wisconsin.gov/topic/Invasives/report) page.
-- **🌐 Learn about …** opens the DNR's page about that plant (each plant in `invasive-plants.json` has a `dnrPage` link), or the DNR's main [invasive species page](https://dnr.wisconsin.gov/topic/Invasives) if it isn't on our list.
+- **🌐 Learn about …** opens the DNR's page about that plant (`dnrPage`), or for the 3 plants that aren't regulated, the page we got their facts from (`infoPage`). For a group, or a plant that isn't on our list, it opens the DNR's main [invasive species page](https://dnr.wisconsin.gov/topic/Invasives).
+- **For a group** (like bush honeysuckles), the details name all the kinds, e.g. "Bush honeysuckles, one of: Amur honeysuckle (Lonicera maackii), …".
+- **For a plant that isn't regulated** (sweet clover, reed canary grass, common mullein), the report screen says the DNR may not track it, and suggests also telling whoever takes care of the land.
 
 ## The plant list (watch list)
 
-The plant list page (opened with **🌿 I know the plant** on the front page) shows the plants in `invasive-plants.json` that have a `frontPage` number, in that order, as small photo tiles. Tapping a tile opens that plant's pop-out card. The first 5 also appear as small round photos on the **I know the plant** button. Today there are 14, chosen because they're the most common in Wisconsin or dangerous to touch:
-garlic mustard, common and glossy buckthorn, Amur honeysuckle (standing in for the bush honeysuckles), wild parsnip, purple loosestrife, Japanese knotweed, spotted knapweed, phragmites, Oriental bittersweet, multiflora rose, Japanese barberry, poison hemlock, and giant hogweed.
+The plant list page (opened with **🌿 I know the plant** on the front page) shows every plant and group in `invasive-plants.json` that has a `frontPage` number, in that order. The first 5 also appear as small round photos on the **I know the plant** button. Our team chose these 17:
 
-Each plant on the plant list has these extra parts:
+| # | Card | Status |
+|---|---|---|
+| 1 | Bush honeysuckles *(group: Amur, Tatarian, Morrow's, Bell's)* | Restricted (Amur: depends on county) |
+| 2 | Common buckthorn | Restricted |
+| 3 | Glossy buckthorn | Restricted |
+| 4 | Invasive thistles *(group: Canada, musk, plumeless, European marsh)* | Restricted (European marsh: depends on county) |
+| 5 | Sweet clover | Not regulated |
+| 6 | Garlic mustard | Restricted |
+| 7 | Dame's rocket | Restricted |
+| 8 | Phragmites | Depends on county |
+| 9 | Reed canary grass | Not regulated (its striped garden form, ribbon grass, is restricted) |
+| 10 | Japanese stiltgrass | **Prohibited** |
+| 11 | Japanese knotweed | Restricted |
+| 12 | Black locust | Restricted |
+| 13 | Wild parsnip | Restricted |
+| 14 | Purple loosestrife | Restricted |
+| 15 | Invasive cattails *(group: narrow-leaved, hybrid, southern, graceful)* | Restricted (southern and graceful: **prohibited**) |
+| 16 | Common teasel | Restricted |
+| 17 | Common mullein | Not regulated |
+
+The other plants in `invasive-plants.json` (like giant hogweed and poison hemlock) have no card, but the AI still recognizes them and shows their warnings.
+
+**A plant card** is a plant in `"plants"` with these extra parts:
 
 | Part | What it's for |
 |---|---|
-| `frontPage` | Its place on the plant list (1 = first; the first 5 also show on the **I know the plant** button). Leave it out to hide the plant from the list. The AI still checks it. |
-| `lookFor` | One or two short sentences on how to spot it, written from the plant's DNR page (shown on the pop-out card, with `why`) |
+| `frontPage` | Its place on the plant list (1 = first). Every card needs a different number. Leave it out to hide the card; the AI still checks the plant. |
+| `lookFor` | One or two short sentences on how to spot it (shown on the pop-out card, with `why`) |
 | `photo` | Its photo in the `photos/` folder |
 | `photoCredit`, `photoCreditUrl` | Who took the photo and its license. These show in the ℹ️ About box. |
+
+**A group card** lives in `"groups"`. It has a `commonName` (like `"Bush honeysuckles"`), the same `frontPage`, `lookFor`, `why`, `photo`, `photoCredit` and `photoCreditUrl` parts, and `"members"`: the scientific names of its kinds. **Every kind must also be its own plant in `"plants"`** (with its own category and `dnrPage`), so the card can list it and the AI can recognize it by name. The robot checker tells you if a member is missing.
 
 **The photos** are real photos from [Wikimedia Commons](https://commons.wikimedia.org) with free licenses (CC0 or CC BY), credited to each photographer. Their hidden data, including any GPS, was removed.
 
@@ -177,7 +202,7 @@ Each plant on the plant list has these extra parts:
 | `app.js` | Everything the app does, in 10 labeled sections |
 | `invasive-plants.json` | The Wisconsin invasive plant list |
 | `plant-helper.js` | The plant helper that runs on Cloudflare and keeps the key secret |
-| `photos/` | The 14 photos on the plant list |
+| `photos/` | The 17 photos on the plant list |
 | `README.md` | This file |
 | `EXPLAIN.md` | Kid-friendly explanation and judge Q&A |
 | `claude.md` | Rules for the AI coding assistant that helped build the app |
@@ -194,24 +219,28 @@ Each plant on the plant list has these extra parts:
 | [exifr](https://github.com/MikeKovarik/exifr) 7.1.3 | Reads GPS saved inside photos | cdn.jsdelivr.net |
 | [OpenStreetMap](https://www.openstreetmap.org/copyright) | Map pictures (tiles) | tile.openstreetmap.org |
 | [Wikimedia Commons](https://commons.wikimedia.org) | Plant list photos (CC0 and CC BY) | stored in `photos/` |
+| [Minnesota DNR](https://www.dnr.state.mn.us/invasives/terrestrialplants/index.html), [Invasive.org](https://www.invasive.org) | Facts for the 3 plants that aren't in Wisconsin's law (sweet clover, reed canary grass, common mullein) | links in `invasive-plants.json` |
 
 Each library has an `integrity` fingerprint in `index.html`. The browser refuses the file if anyone changed it, so if you upgrade a library, update its fingerprint too.
 
 ## The invasive plant list
 
-**Source:** Wisconsin Administrative Code [chapter NR 40](https://docs.legis.wisconsin.gov/code/admin_code/nr/001/40), *Invasive Species Identification, Classification and Control*, Register November 2024 No. 827. Prohibited plants are in NR 40.04(2)(b) and restricted plants are in NR 40.05(2)(b). The "why it's a problem" sentences are our own short summaries.
+**Source:** Wisconsin Administrative Code [chapter NR 40](https://docs.legis.wisconsin.gov/code/admin_code/nr/001/40), *Invasive Species Identification, Classification and Control*, Register November 2024 No. 827. Prohibited plants are in NR 40.04(2)(b) and restricted plants are in NR 40.05(2)(b). "How to spot it" comes from each plant's DNR page. The "why it's a problem" sentences are our own short summaries.
+
+Three plants on our team's list are **not in NR 40**: sweet clover, reed canary grass and common mullein. Their facts come from the [Minnesota DNR](https://www.dnr.state.mn.us/invasives/terrestrialplants/herbaceous/whitesweetclover.html) (sweet clover, [reed canary grass](https://www.dnr.state.mn.us/invasives/terrestrialplants/grasses/reedcanarygrass.html)) and [Invasive.org](https://www.invasive.org/browse/subject/3080?tab=subject-info) (common mullein).
 
 **Categories:**
 - `prohibited`: not yet common in Wisconsin. The goal is to stop it before it spreads, so reports are very important.
 - `restricted`: already common in parts of Wisconsin. It's illegal to sell, move, or plant it.
 - `depends-on-county`: NR 40 lists it as prohibited in some counties and restricted in others.
+- `not-regulated`: invasive, but not in NR 40. It has no `dnrPage`; instead it needs `infoPage` (a link to a trusted page about it) and `infoSource` (who wrote that page, like `"Minnesota DNR"`).
 
 **How matching works:** we compare only the first two words of the scientific name (genus + species), ignoring capital letters and the hybrid sign `×`. So `Lonicera × bella Zabel` matches `lonicera x bella`. We also check `otherNames`, because scientists sometimes rename plants. For example, NR 40 says *Fallopia japonica*, but Pl@ntNet says *Reynoutria japonica*.
 
 **When we say "possible invasive":** if any of the AI's top 3 guesses is on the list **and** the AI is at least 20% sure about that guess. Below 20%, we say "The AI isn't sure." Either way, you can still report it.
 
 ### Add a plant
-1. Find it in NR 40.04(2)(b) (prohibited) or NR 40.05(2)(b) (restricted). If it's in both, use `depends-on-county`. Then find its page on the DNR website (they look like `https://dnr.wisconsin.gov/topic/Invasives/fact/PlantName`).
+1. Find it in NR 40.04(2)(b) (prohibited) or NR 40.05(2)(b) (restricted). If it's in both, use `depends-on-county`. If it isn't in NR 40 at all, use `not-regulated` (see Categories). Then find its page on the DNR website (they look like `https://dnr.wisconsin.gov/topic/Invasives/fact/PlantName`). A few plants have no DNR page; leave `dnrPage` out for those.
 2. Add a block inside `"plants": [ ... ]` in `invasive-plants.json`, with a comma between blocks:
    ```json
    {
@@ -225,10 +254,12 @@ Each library has an `integrity` fingerprint in `index.html`. The browser refuses
    ```
 3. If it's dangerous to touch or eat, add `"warning": "Don't touch! ..."`.
 4. Put the plant's other scientific names in `otherNames`. The name Pl@ntNet uses is the most important one.
-5. To show it on the plant list too, add `frontPage` (a number no other plant uses), `lookFor`, `photo`, `photoCredit` and `photoCreditUrl` (see "The plant list" above).
+5. To show it on the plant list too, add `frontPage` (a number no other card uses), `lookFor`, `photo`, `photoCredit` and `photoCreditUrl` (see "The plant list" above). To put it in a group instead, add its scientific name to that group's `"members"`.
 6. Reload the app. If something breaks, paste the file into https://jsonlint.com to find the missing comma.
 
 ### Known limits
 - **Phragmites:** a native kind has the same genus + species, so it also shows as "possible". DNR experts make the final call.
+- **Reed canary grass and ribbon grass** are the same species, so the AI can't tell them apart. The plain green wild grass isn't regulated; the striped garden form (ribbon grass) is restricted.
+- **Thistles and cattails:** Wisconsin also has native thistles and a native cattail (broad-leaved cattail). The AI matches only the invasive kinds by name, and the group cards explain how to tell them apart.
 - **Japanese barberry** and a few others: NR 40 exempts some garden varieties, and the app can't tell them apart from a photo.
 - **County splits:** the app doesn't know the county, so it says "depending on the county."
