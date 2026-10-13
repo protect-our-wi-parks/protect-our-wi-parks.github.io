@@ -72,6 +72,7 @@ jobs:
             places.add(plant.frontPage);
             if (!plant.lookFor) problem("invasive-plants.json", `${name}: "lookFor" (how to spot it) is missing.`);
             if (!plant.photo || !fs.existsSync(plant.photo)) problem("invasive-plants.json", `${name}: the photo "${plant.photo}" is missing. Upload it to the photos folder.`);
+            else if (!/\.(jpe?g|png)$/i.test(plant.photo)) problem("invasive-plants.json", `${name}: the photo must be a .jpg, .jpeg or .png file (take a screenshot of it and upload that).`);
             if (!plant.photoCredit || !plant.photoCreditUrl) problem("invasive-plants.json", `${name}: photoCredit and photoCreditUrl (who took the photo) are needed.`);
           }
           console.log(`Checked ${places.size} front-page plants.`);

@@ -40,7 +40,7 @@ There are two paths:
 
 ## Words to know
 
-- **Scientific name:** every plant has a two-word name that's the same all over the world, like *Alliaria petiolata* (garlic mustard). The first word is the **genus** (the plant's family group), and the second is the **species**. We match on both words, because some plants in the same genus are native and good!
+- **Scientific name:** every plant has a two-word name that's the same all over the world, like *Alliaria petiolata* (garlic mustard). The first word is the **genus** (a small group of closely related plants), and the second is the **species** (the exact kind of plant). We match on both words, because some plants in the same genus are native and good!
 - **Prohibited:** not common in Wisconsin yet. If we find it early, the DNR can stop it. These reports matter most!
 - **Restricted:** already common in parts of Wisconsin. It's against the law to sell it, move it, or plant it.
 - **Confidence ("% sure"):** how sure the AI is about its guess. Under 20%, we say "The AI isn't sure."
@@ -53,10 +53,10 @@ There are two paths:
 Pl@ntNet learned from millions of plant photos that scientists and regular people labeled. It looks for patterns, like leaf shape and flower color, and compares them to what it learned. Then it gives its top guesses and a score for how sure it is.
 
 **What if it's wrong?**
-It can be wrong! That's why we always say "**possible** invasive plant" and show how sure the AI is. If it's less than 20% sure, we say "The AI isn't sure." A real expert at the DNR makes the final decision. And if you already know the plant, you don't need the AI at all: pick it from the list on the front page.
+It can be wrong! That's why we always say "**possible** invasive plant" and show how sure the AI is. If it's less than 20% sure, we say "The AI isn't sure." A real expert at the DNR makes the final decision. And if you already know the plant, you don't need the AI at all: tap **I know the plant** and pick it from the list.
 
 **Where does my photo go?**
-If you pick a plant from the list, there's no photo at all. If you use the AI, the photo stays on your phone until the AI step. Then a smaller copy goes through our plant helper to Pl@ntNet to be identified. The helper only passes it along and saves nothing (you can read all of its code in `plant-helper.js`). There's no database, so we never keep your photo. Your location stays on your phone. We show it to you on the last screen so you can copy it into your report. (Drawing the map means downloading map pictures of your area from OpenStreetMap.)
+If you pick a plant from the list, there's no photo at all. If you use the AI, the photo stays on your phone until the AI step. Then a smaller copy goes through our plant helper to Pl@ntNet to be identified. The helper only passes it along and saves nothing (you can read all of its code in `plant-helper.js`). There's no database, so we never keep your photo. Your location stays on your phone. We show it to you on the last screen so you can copy it into your report. It only leaves your phone if you tap **See this spot on a map** (that opens OpenStreetMap at that spot) or paste it into your DNR report yourself. (Drawing the map means downloading map pictures of your area from OpenStreetMap.)
 
 **Why no login?**
 A login means storing people's names and passwords, and keeping those safe is a big job. Our app doesn't need to know who you are to help find invasive plants, so we left it out. Safer and simpler!

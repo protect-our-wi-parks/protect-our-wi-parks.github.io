@@ -53,17 +53,23 @@ Team members can change the app from **any computer or Chromebook**, right on th
 2. Click the ✏️ **pencil**, make your change, then click **Commit changes…**.
 3. Write a short message that says what you changed (example: "Add cypress spurge"), then click **Commit changes**.
 
-**Changed `app.js` or `style.css`?** In `index.html`, add 1 to the version sticker in **both** `style.css?v=4` and `app.js?v=4`. That makes phones download the new files instead of reusing old saved copies. The robot checker tells you if the two numbers don't match.
+**Changed `app.js` or `style.css`?** In `index.html`, add 1 to the version number in **both** `style.css?v=` and `app.js?v=` (for example, `v=4` becomes `v=5` in both places). That makes phones download the new files instead of reusing old saved copies. The robot checker tells you if the two numbers don't match.
 
 **Change several files at once:** on the repository page, press the **`.`** key. A full code editor opens in your browser. When you're done, use the **Source Control** panel on the left to commit.
 
-**Change a front-page photo:** open the `photos` folder → **Add file → Upload files**, then point the plant's `photo` at it in `invasive-plants.json` (see "The plant list" below).
+**Change a plant's photo:** follow the photo rules in "The plant list" below (use a screenshot, so there's no hidden location), then open the `photos` folder → **Add file → Upload files**, and point the plant's `photo` at it in `invasive-plants.json`.
 
 **Check your change:**
 - The **robot checker** runs on every change. Open the **Actions** tab: ✅ means all good. ❌ means something is broken. Click it to see the problem in plain words, like "Garlic mustard: category must be one of…" or "This file is broken (often a missing comma) … line 8 column 7".
 - After about 1–2 minutes, reload https://wi-invasive-plants.github.io on your phone and try it.
 
-**Undo a mistake:** every change is saved. Open the file → **History** → click the version from before the mistake → **Raw** → copy it all, then paste it back with the ✏️ pencil and commit. Not sure what broke? Ask an adult; they can put any file back exactly as it was.
+**Undo a mistake:** every change is saved.
+1. Open the file and click **History**.
+2. Find the change from **before** your mistake. On the right of it are three small icons. Click the **middle** one, **View code at this point**. (Not the `<>` icon: that one shows the whole project.)
+3. Click **Raw**, then select all and copy.
+4. Open the file again (the newest version), click the ✏️ pencil, select all, paste, and commit with a message like "Undo my last change".
+
+Not sure what broke? Ask an adult; they can put any file back exactly as it was.
 
 **What still needs an adult:** the Pl@ntNet key and the plant helper on Cloudflare. Normal changes (plants, words, colors, photos, docs) never need them.
 
@@ -116,10 +122,10 @@ The plant helper is `plant-helper.js`: a tiny program that runs on Cloudflare, n
    
    Save or deploy.
 5. Copy the helper's address (like `https://plant-helper.YOUR-SUBDOMAIN.workers.dev`).
-6. In `app.js`, find `HELPER_URL` and paste that address in. Then run `git add .`, `git commit -m "Connect plant helper"` and `git push`.
+6. In `app.js`, find `HELPER_URL` and paste that address in. Because `app.js` changed, add 1 to both version numbers in `index.html` (see "Making changes on GitHub"). Then run `git add .`, `git commit -m "Connect plant helper"` and `git push`.
 7. **Check it:** open the helper's address in a browser. If you see `This website isn't allowed to use the plant helper`, it's running. (A browser address bar isn't on the allowed list, so that "no" is correct.) Then open the app and try a real photo.
 
-**Optional:** the helper calls Pl@ntNet from a server, not from a web page, so it doesn't need Pl@ntNet's "expose my API key" or "Authorized domains" settings. You can turn those off at my.plantnet.org. If the app then says the helper's key isn't working, turn "expose my API key" back on.
+**Good to know:** the helper calls Pl@ntNet from a server, not from a web page, so Pl@ntNet's "Authorized domains" list isn't used. Our helper works with that list empty.
 
 ### Updating the plant helper
 `plant-helper.js` on GitHub is just a copy for reading. The one that runs lives in Cloudflare. If you change it, paste the new version into Cloudflare (**Workers & Pages → plant-helper → Edit code → Deploy**). Your `PLANTNET_KEY` and `ALLOWED_SITES` settings stay as they are.
@@ -152,7 +158,13 @@ Each plant on the plant list has these extra parts:
 | `photo` | Its photo in the `photos/` folder |
 | `photoCredit`, `photoCreditUrl` | Who took the photo and its license. These show in the ℹ️ About box. |
 
-**The photos** are real photos from [Wikimedia Commons](https://commons.wikimedia.org) with free licenses (CC0 or CC BY), credited to each photographer. Their hidden data, including any GPS, was removed. To use **your own** photo: keep it under 1 MB, use a public place (never a home or school), and set `photoCredit` to `"Photo: our team"`.
+**The photos** are real photos from [Wikimedia Commons](https://commons.wikimedia.org) with free licenses (CC0 or CC BY), credited to each photographer. Their hidden data, including any GPS, was removed.
+
+**To use your own photo:**
+1. **Take a screenshot of your photo and upload the screenshot.** A phone photo usually has the exact spot where it was taken hidden inside it (that could be someone's home). A screenshot doesn't, and it's always a `.png` file that every browser can show. (iPhone photos are often `.heic`, which many browsers can't show. The robot checker only accepts `.jpg`, `.jpeg` or `.png`.)
+2. Only photos taken in a public place, never at a home or school, and with no people in them.
+3. Keep it under 1 MB. Give it a simple name with no spaces, like `my-buckthorn.png`.
+4. Set `photoCredit` to `"Photo: our team"` and `photoCreditUrl` to `"https://github.com/wi-invasive-plants/wi-invasive-plants.github.io"`.
 
 **Without internet:** once the app has opened, the plant list and the "I know the plant" path keep working with no internet. Only the map pictures and the plant AI need internet.
 
@@ -181,7 +193,7 @@ Each plant on the plant list has these extra parts:
 | [Leaflet](https://leafletjs.com/) 1.9.4 | Draws the map | cdnjs.cloudflare.com |
 | [exifr](https://github.com/MikeKovarik/exifr) 7.1.3 | Reads GPS saved inside photos | cdn.jsdelivr.net |
 | [OpenStreetMap](https://www.openstreetmap.org/copyright) | Map pictures (tiles) | tile.openstreetmap.org |
-| [Wikimedia Commons](https://commons.wikimedia.org) | Front-page plant photos (CC0 and CC BY) | stored in `photos/` |
+| [Wikimedia Commons](https://commons.wikimedia.org) | Plant list photos (CC0 and CC BY) | stored in `photos/` |
 
 Each library has an `integrity` fingerprint in `index.html`. The browser refuses the file if anyone changed it, so if you upgrade a library, update its fingerprint too.
 
@@ -213,7 +225,7 @@ Each library has an `integrity` fingerprint in `index.html`. The browser refuses
    ```
 3. If it's dangerous to touch or eat, add `"warning": "Don't touch! ..."`.
 4. Put the plant's other scientific names in `otherNames`. The name Pl@ntNet uses is the most important one.
-5. To show it on the front page too, add `frontPage`, `lookFor`, `photo`, `photoCredit` and `photoCreditUrl` (see "The plant list" above).
+5. To show it on the plant list too, add `frontPage` (a number no other plant uses), `lookFor`, `photo`, `photoCredit` and `photoCreditUrl` (see "The plant list" above).
 6. Reload the app. If something breaks, paste the file into https://jsonlint.com to find the missing comma.
 
 ### Known limits
