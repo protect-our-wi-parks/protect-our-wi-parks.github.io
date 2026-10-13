@@ -76,6 +76,11 @@ jobs:
           }
           console.log(`Checked ${places.size} front-page plants.`);
 
+          // Version stickers: style.css?v= and app.js?v= in index.html should have the same number.
+          const page = fs.readFileSync("index.html", "utf8");
+          const css = (page.match(/style\.css\?v=(\d+)/) || [])[1], js = (page.match(/app\.js\?v=(\d+)/) || [])[1];
+          if (!css || css !== js) problem("index.html", `The version stickers don't match (style.css?v=${css}, app.js?v=${js}). Use the same number for both.`);
+
           // Safety: a Pl@ntNet key must never be in our public code. It belongs only in Cloudflare.
           for (const file of ["app.js", "index.html", "style.css", "plant-helper.js", "invasive-plants.json", "README.md", "EXPLAIN.md"]) {
             if (/2b10[A-Za-z0-9]{18,}/.test(fs.readFileSync(file, "utf8"))) problem(file, "This looks like a Pl@ntNet key! Remove it right away and tell an adult to make a new key. Keys only go in Cloudflare.");
