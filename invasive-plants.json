@@ -3,13 +3,13 @@
   "sourceUrl": "https://docs.legis.wisconsin.gov/code/admin_code/nr/001/40",
   "plants": [
     {
-      "scientificName": "Alliaria petiolata",
+      "scientificName": "Rhamnus cathartica",
       "otherNames": [],
-      "commonName": "Garlic mustard",
-      "dnrPage": "https://dnr.wisconsin.gov/topic/Invasives/fact/GarlicMustard",
+      "commonName": "Common Buckthorn",
+      "dnrPage": "https://dnr.wisconsin.gov/topic/Invasives/fact/CommonBuckthorn",
       "frontPage": 1,
-      "lookFor": "Crushed leaves smell like garlic. Look for small white flowers with 4 petals in spring and triangle-shaped, toothy leaves.",
-      "photo": "photos/garlic-mustard.jpg",
+      "lookFor": "A shrub or small tree whose leaves stay green late into fall. Clusters of black, pea-sized berries. Scratch the bark: it's orange inside.",
+      "photo": "photos/common-buckthorn.jpg",
       "photoCredit": "Photo: Robert Flogaus-Faust, CC BY 4.0, Wikimedia Commons",
       "photoCreditUrl": "https://commons.wikimedia.org/wiki/File:Alliaria_petiolata_4_RF.jpg",
       "category": "restricted",
