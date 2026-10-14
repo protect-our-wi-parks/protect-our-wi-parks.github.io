@@ -95,9 +95,6 @@ const STATUS_WORDS = {
 // Groups of look-alike plants (like bush honeysuckles) from invasive-plants.json. Each group gets one card.
 let plantGroups = [];
 
-// The plant list page has two sections. Each card's "listSection" says which grid its tile goes in.
-const SECTION_GRIDS = { common: "plant-grid", early: "early-grid" };
-
 // The plants in a group, looked up by their scientific names.
 function groupMembers(group) {
   return group.members.map((name) => invasivePlants.find((plant) => plant.scientificName === name));
@@ -110,16 +107,15 @@ function categoryOf(item) {
   return categories.size === 1 ? [...categories][0] : "mixed";
 }
 
-// Make a photo tile for each front-page plant in its section of the plant list page, credit each photo
-// in the About box, and show a few small photos of common plants on the "I know the plant" button.
+// Make a photo tile for each front-page plant on the plant list page, credit each photo in the About box,
+// and show a few small photos on the "I know the plant" button.
 function showPlantTiles() {
   const front = [...invasivePlants, ...plantGroups].filter((item) => item.frontPage).sort((a, b) => a.frontPage - b.frontPage);
   for (const plant of front) {
-    document.getElementById(SECTION_GRIDS[plant.listSection]).append(plantTile(plant));
+    document.getElementById("plant-grid").append(plantTile(plant));
     creditPhoto(plant);
   }
-  const common = front.filter((plant) => plant.listSection === "common");
-  for (const plant of common.slice(0, 5)) addText(document.getElementById("choice-photos"), "img", "").src = plant.photo;
+  for (const plant of front.slice(0, 5)) addText(document.getElementById("choice-photos"), "img", "").src = plant.photo;
 }
 
 // Open the plant list page.
@@ -627,10 +623,8 @@ function updateReportScreen() {
 // One sentence that says how sure we are about the plant.
 function reportTip() {
   const { kind, guess, plant } = decision || {};
-  let notTracked = "";
-  if (plant && categoryOf(plant) === "not-regulated") notTracked = plant.listSection === "early"
-    ? " This plant isn't regulated by state law yet, but it's rare here, so experts want to know where it grows."
-    : " This plant isn't regulated by state law, so the DNR may not track it. You can also tell whoever takes care of the land.";
+  const notTracked = plant && categoryOf(plant) === "not-regulated"
+    ? " This plant isn't regulated by state law, so the DNR may not track it. You can also tell whoever takes care of the land." : "";
   if (kind === "known") return `You picked ${plant.commonName} from the list. Thanks for watching out!` + notTracked;
   if (kind === "invasive") return `The AI thinks this may be ${plant.commonName} (${percent(guess.score)} sure). The DNR will check.` + notTracked;
   return "The AI didn't match this to our invasive list. If you still think it's invasive, you can report it anyway.";

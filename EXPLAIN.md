@@ -4,7 +4,7 @@
 
 Invasive plants are plants from other places that spread fast and crowd out Wisconsin's own plants. The Wisconsin DNR (Department of Natural Resources) wants people to report them. But most people don't know what they're looking at, or how to report it.
 
-Our app's front page says **"Watch out for these invasive plants! If you see one, report it to the Wisconsin DNR."** One tap away is our team's watch list of 24 invasive plants, each with a picture and tips on how to spot it. Some cards are **groups** of look-alike plants, like the bush honeysuckles. The list has two sections: plants that are **common in southern Wisconsin**, and **rare** plants to report right away.
+Our app's front page says **"Watch out for these invasive plants! If you see one, report it to the Wisconsin DNR."** One tap away is our team's watch list of 17 invasive plants, each with a photo and tips on how to spot it. Some cards are **groups** of look-alike plants, like the bush honeysuckles.
 
 ## How the information flows
 
@@ -17,8 +17,8 @@ There are two paths:
                                                                (photo → our helper → Pl@ntNet)
 ```
 
-1. **Know the plant?** Tap **I know the plant**. A page pops up with pictures of 24 invasive plants, in two sections: common and rare. Tap yours: a card shows how to spot it and why it's a problem. Tap **I found this: report it**. No photo and no AI needed, because you already know.
-2. **Not sure?** Tap **Not sure what it is?** and take a photo. We shrink the photo and send it through our **plant helper** to **Pl@ntNet**, a plant-identifying AI made by scientists. It sends back its 3 best guesses, and we check each one against our list of 48 invasive plants.
+1. **Know the plant?** Tap **I know the plant**. A page pops up with photos of 17 invasive plants. Tap yours: a card shows how to spot it and why it's a problem. Tap **I found this: report it**. No photo and no AI needed, because you already know.
+2. **Not sure?** Tap **Not sure what it is?** and take a photo. We shrink the photo and send it through our **plant helper** to **Pl@ntNet**, a plant-identifying AI made by scientists. It sends back its 3 best guesses, and we check each one against our list of 30 Wisconsin invasive plants.
 3. **Where is it?** The phone's GPS finds you, the photo already knows where it was taken, or you tap the map.
 4. **Report it:** we show the plant, how you know, and the exact spot, so you can copy them. Then a button opens the DNR's official report page. **You** send the report. The app never sends anything by itself.
 
@@ -31,7 +31,7 @@ There are two paths:
 | `app.js` | The brain: what happens when you tap each button. It has 10 labeled sections. |
 | `invasive-plants.json` | Our list of 30 Wisconsin invasive plants, copied from the state law called NR 40. |
 | `plant-helper.js` | The plant helper. It runs in the cloud (on Cloudflare), keeps the AI key locked up, and passes photos to Pl@ntNet. |
-| `photos/` | The 24 plant pictures on the plant list. |
+| `photos/` | The 17 plant photos on the plant list. |
 | `README.md` | Instructions for grown-ups: running the app, putting it online, adding plants. |
 | `EXPLAIN.md` | This file! |
 | `claude.md` | Rules we gave the AI coding helper that helped us build the app (like "keep it simple" and "never put names in the code"). |
@@ -43,8 +43,7 @@ There are two paths:
 - **Scientific name:** every plant has a two-word name that's the same all over the world, like *Alliaria petiolata* (garlic mustard). The first word is the **genus** (a small group of closely related plants), and the second is the **species** (the exact kind of plant). We match on both words, because some plants in the same genus are native and good!
 - **Prohibited:** not common in Wisconsin yet. If we find it early, the DNR can stop it. These reports matter most!
 - **Restricted:** already common in parts of Wisconsin. It's against the law to sell it, move it, or plant it.
-- **Not regulated:** some plants cause problems but aren't in Wisconsin's invasive plant law. Four on our list are like that: sweet clover, reed canary grass, common mullein and red hailstone. The app labels them honestly.
-- **Early detection:** finding a new invasive plant while there are only a few, so it can be removed before it spreads. Our **🚨 Rare: report right away!** section is for these plants.
+- **Not regulated:** some plants cause problems but aren't in Wisconsin's invasive plant law. Three on our list are like that: sweet clover, reed canary grass and common mullein. The app labels them honestly and says the DNR may not track them.
 - **Group:** some invasive plants have look-alike cousins (like four kinds of bush honeysuckle). One card covers the whole group and lists each kind.
 - **Confidence ("% sure"):** how sure the AI is about its guess. Under 20%, we say "The AI isn't sure."
 - **API key:** like a library card for the plant AI. It lets us use Pl@ntNet, up to 500 checks a day. It's a secret, so only our plant helper has it.
@@ -85,13 +84,10 @@ Our code is public on GitHub, so the key can't go there, because anyone could co
 Right on the GitHub website, from any computer. We click a file, click the pencil, make the change, and save. A robot checks our work for mistakes, and the live app updates by itself in about a minute.
 
 **Bonus: Where do the plant photos come from?**
-They're real photos from Wikimedia Commons that photographers shared for anyone to use. We credit each photographer in the app's ℹ️ About box, and we removed hidden data (like GPS) from the photos. Red hailstone's picture is a drawing from the 1800s, because we couldn't find a photo of it that we were allowed to use.
+They're real photos from Wikimedia Commons that photographers shared for anyone to use. We credit each photographer in the app's ℹ️ About box, and we removed hidden data (like GPS) from the photos.
 
 **Bonus: Why are some plants "not regulated"?**
-Wisconsin's law (NR 40) lists the invasive plants people can't sell, move or plant. Some plants our team watches for, like sweet clover and reed canary grass, still crowd out native plants but aren't in that law. We kept them on our list and labeled them honestly, and we got their facts from the Minnesota DNR, Invasive.org and the University of Minnesota Extension. Red hailstone is new, so the law doesn't list it yet, but experts want to know where it grows.
-
-**Bonus: Why does the plant list have two sections?**
-The Wisconsin DNR looked at our list and suggested it. Some plants, like buckthorn and garlic mustard, are already **common** in southern Wisconsin. Others are **rare**: new to Wisconsin or found in only a few places, like Japanese stiltgrass and narrowleaf bittercress. Finding a rare one early means it can be removed before it spreads, so that section says **report right away!**
+Wisconsin's law (NR 40) lists the invasive plants people can't sell, move or plant. Some plants our team watches for, like sweet clover and reed canary grass, still crowd out native plants but aren't in that law. We kept them on our list and labeled them honestly, and we got their facts from the Minnesota DNR and Invasive.org.
 
 **Bonus: Why show a list of plants first?**
 If you already know the plant, you don't need an AI: picking it from the list is 100% certain and faster. The list also teaches people what to watch for before they ever see one. The AI is there for when you're not sure.

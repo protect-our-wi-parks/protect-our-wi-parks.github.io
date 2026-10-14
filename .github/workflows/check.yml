@@ -73,13 +73,12 @@ jobs:
             if (!group.why) problem("invasive-plants.json", `${group.commonName}: "why" (one sentence) is missing.`);
           }
 
-          // The plant list cards (plants and groups): each needs its place, its section, a "Look for" line, a photo that exists, and a credit.
+          // The plant list cards (plants and groups): each needs its place, a "Look for" line, a photo that exists, and a credit.
           const places = new Set();
           for (const plant of [...((list && list.plants) || []), ...groups].filter((p) => "frontPage" in p)) {
             const name = plant.commonName || "a plant";
             if (!Number.isInteger(plant.frontPage) || places.has(plant.frontPage)) problem("invasive-plants.json", `${name}: frontPage must be a whole number that no other plant uses.`);
             places.add(plant.frontPage);
-            if (!["common", "early"].includes(plant.listSection)) problem("invasive-plants.json", `${name}: listSection must be "common" or "early" (the rare plants section).`);
             if (!plant.lookFor) problem("invasive-plants.json", `${name}: "lookFor" (how to spot it) is missing.`);
             if (!plant.photo || !fs.existsSync(plant.photo)) problem("invasive-plants.json", `${name}: the photo "${plant.photo}" is missing. Upload it to the photos folder.`);
             else if (!/\.(jpe?g|png)$/i.test(plant.photo)) problem("invasive-plants.json", `${name}: the photo must be a .jpg, .jpeg or .png file (take a screenshot of it and upload that).`);

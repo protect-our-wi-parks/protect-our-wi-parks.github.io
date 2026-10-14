@@ -17,8 +17,8 @@
           integrity="sha384-KRanV2NRwHPanp7iM6nlLQC5jPCTscSYMko30dLJHzNXJaUNtcucWv+SOi3jV3PE" crossorigin="anonymous" defer></script>
   <!-- The ?v= number is a version sticker. When you change style.css or app.js, add 1 to it (in both places),
        so phones download the new file instead of reusing an old saved copy. -->
-  <link rel="stylesheet" href="style.css?v=6">
-  <script src="app.js?v=6" defer></script>
+  <link rel="stylesheet" href="style.css?v=5">
+  <script src="app.js?v=5" defer></script>
 </head>
 <body>
   <header>
@@ -132,11 +132,7 @@
       <form method="dialog"><button class="small" value="close">✕ Close</button></form>
     </div>
     <p class="hint">Tap a plant to see how to spot it. Red border = prohibited. ⚠️ = don't touch.</p>
-    <h3 class="list-heading">Common in southern Wisconsin</h3>
     <div id="plant-grid" class="plant-grid"></div>
-    <h3 class="list-heading rare">🚨 Rare: report right away!</h3>
-    <p class="hint">These plants are new to Wisconsin or grow in only a few places. Finding one early helps stop it from spreading.</p>
-    <div id="early-grid" class="plant-grid"></div>
     <p class="hint"> 
       <a href="https://dnr.wisconsin.gov/topic/Invasives/RegulatedSpecies" target="_blank" rel="noopener">See every regulated species on the DNR website</a>.</p>
   </dialog>
@@ -172,8 +168,8 @@
         Experts at the DNR make the final call. If you know the plant for sure, pick it from the list instead.</p>
 
       <h3>Stay safe</h3>
-      <p>Don't touch plants you don't know. Wild parsnip and giant hogweed can burn skin, Japanese hops can cause a rash,
-        and poison hemlock is very poisonous. Explore with an adult and stay on public land.</p>
+      <p>Don't touch plants you don't know. Wild parsnip and giant hogweed can burn skin, and poison hemlock is very
+        poisonous. Explore with an adult and stay on public land.</p>
 
       <h3>Where your photo and location go</h3>
       <ul>
@@ -192,8 +188,6 @@
       <ul id="credits">
         <li>Invasive plant list: Wisconsin rule
           <a href="https://docs.legis.wisconsin.gov/code/admin_code/nr/001/40" target="_blank" rel="noopener">NR 40</a> (November 2024).</li>
-        <li>The "common" and "rare" sections of the plant list were suggested by the Wisconsin DNR.</li>
-        <li>Facts about plants that aren't in NR 40: Minnesota DNR, Invasive.org, and University of Minnesota Extension.</li>
         <li>Plant AI: <a href="https://plantnet.org" target="_blank" rel="noopener">Pl@ntNet</a>.</li>
         <li>Map: <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">© OpenStreetMap</a> contributors,
           drawn with <a href="https://leafletjs.com" target="_blank" rel="noopener">Leaflet</a>.</li>
