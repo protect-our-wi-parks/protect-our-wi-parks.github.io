@@ -187,6 +187,16 @@ main > section h2 {
   white-space: nowrap;
 }
 
+/* The two section titles on the plant list page. The rare section's title is red. */
+.list-heading {
+  margin: 16px 0 10px;
+}
+
+.list-heading.rare {
+  margin-top: 24px;
+  color: #c62828;
+}
+
 /* The grid of plant tiles on the plant list page: about 3 across on most phones. */
 .plant-grid {
   display: grid;
