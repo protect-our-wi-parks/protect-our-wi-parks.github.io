@@ -96,19 +96,6 @@
       "photoCreditUrl": "https://commons.wikimedia.org/wiki/File:Phalaris_arundinacea_3_RF.jpg"
     },
     {
-      "scientificName": "Microstegium vimineum",
-      "otherNames": [],
-      "commonName": "Japanese stiltgrass",
-      "dnrPage": "https://dnr.wisconsin.gov/topic/Invasives/fact/JapaneseStiltgrass",
-      "category": "prohibited",
-      "why": "It spreads quickly across forest floors and crowds out wildflowers and baby trees.",
-      "frontPage": 10,
-      "lookFor": "A thin grass with short, lance-shaped leaves (2 to 3 inches) with a silvery stripe a little off center. It turns purple in fall. First found in Wisconsin in 2020, so report it!",
-      "photo": "photos/japanese-stiltgrass.jpg",
-      "photoCredit": "Photo: James H. Miller & Ted Bodner, Southern Weed Science Society, Bugwood.org, CC BY 3.0, Wikimedia Commons",
-      "photoCreditUrl": "https://commons.wikimedia.org/wiki/File:Microstegium_vimineum_2307199.jpg"
-    },
-    {
       "scientificName": "Reynoutria japonica",
       "otherNames": ["Fallopia japonica", "Polygonum cuspidatum"],
       "commonName": "Japanese knotweed",
