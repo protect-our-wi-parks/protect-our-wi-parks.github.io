@@ -2,25 +2,29 @@
 
 ## The big idea
 
-Invasive plants are plants from other places that spread fast and crowd out Wisconsin's own plants. The Wisconsin DNR (Department of Natural Resources) wants people to report them. But most people don't know what they're looking at, or how to report it.
+Some plants hurt Wisconsin's nature, and some need our help:
+- **Invasive plants** come from other places, spread fast and crowd out Wisconsin's own plants.
+- **Endangered plants** are Wisconsin's own plants that are almost gone. The law protects them.
 
-Our app's front page says **"Watch out for these invasive plants! If you see one, report it to the Wisconsin DNR."** One tap away is our team's watch list of 17 invasive plants, each with a photo and tips on how to spot it. Some cards are **groups** of look-alike plants, like the bush honeysuckles.
+The Wisconsin DNR (Department of Natural Resources) wants people to report both. But most people don't know what they're looking at, or how to report it.
+
+Our app's front page says **"Watch for these plants in Wisconsin!"** and has three big buttons: **🌿 Invasive plants** (our team's 16), **🌸 Endangered plants** (12 protected plants), and **📷 Not sure what it is?** Each plant has a photo and tips on how to spot it. Some invasive cards are **groups** of look-alike plants, like the bush honeysuckles.
 
 ## How the information flows
 
 There are two paths:
 
 ```
- KNOW IT (100% sure)   🌿 Pick it from the list ──► 📍 Where is it? ──────────────────────────────────► 📮 Report it
+ KNOW IT (100% sure)   🌿🌸 Pick it from a list ──► 📍 Where is it? ──────────────────────────────────► 📮 Report it
 
  NOT SURE              📷 Take a photo ──► 📍 Where is it? ──► 🤖 AI guesses ──► 📋 On Wisconsin's list? ──► 📮 Report it
                                                                (photo → our helper → Pl@ntNet)
 ```
 
-1. **Know the plant?** Tap **I know the plant**. A page pops up with photos of 17 invasive plants. Tap yours: a card shows how to spot it and why it's a problem. Tap **I found this: report it**. No photo and no AI needed, because you already know.
-2. **Not sure?** Tap **Not sure what it is?** and take a photo. We shrink the photo and send it through our **plant helper** to **Pl@ntNet**, a plant-identifying AI made by scientists. It sends back its 3 best guesses, and we check each one against our list of 30 Wisconsin invasive plants.
+1. **Know the plant?** Tap **Invasive plants** or **Endangered plants**. A page pops up with photos. Tap yours: a card shows how to spot it and why it matters. Tap **I found this: report it**. No photo and no AI needed, because you already know.
+2. **Not sure?** Tap **Not sure what it is?** and take a photo. We shrink the photo and send it through our **plant helper** to **Pl@ntNet**, a plant-identifying AI made by scientists. It sends back its 3 best guesses, and we check each one against our two lists: 41 invasive plants and 116 endangered or threatened plants.
 3. **Where is it?** The phone's GPS finds you, the photo already knows where it was taken, or you tap the map.
-4. **Report it:** we show the plant, how you know, and the exact spot, so you can copy them. Then a button opens the DNR's official report page. **You** send the report. The app never sends anything by itself.
+4. **Report it:** we show the plant, how you know, and the exact spot, so you can copy them. Then a button opens the DNR's official report page (for an endangered plant, the DNR's rare species form). **You** send the report. The app never sends anything by itself.
 
 ## What each file does
 
@@ -31,7 +35,8 @@ There are two paths:
 | `app.js` | The brain: what happens when you tap each button. It has 10 labeled sections. |
 | `invasive-plants.json` | Our list of 30 Wisconsin invasive plants, copied from the state law called NR 40. |
 | `plant-helper.js` | The plant helper. It runs in the cloud (on Cloudflare), keeps the AI key locked up, and passes photos to Pl@ntNet. |
-| `photos/` | The 17 plant photos on the plant list. |
+| `endangered-plants.json` | Our list of Wisconsin's endangered and threatened plants, from the state's law (NR 27). |
+| `photos/` | The plant photos on the two plant pages. |
 | `README.md` | Instructions for grown-ups: running the app, putting it online, adding plants. |
 | `EXPLAIN.md` | This file! |
 | `claude.md` | Rules we gave the AI coding helper that helped us build the app (like "keep it simple" and "never put names in the code"). |
@@ -43,6 +48,8 @@ There are two paths:
 - **Scientific name:** every plant has a two-word name that's the same all over the world, like *Alliaria petiolata* (garlic mustard). The first word is the **genus** (a small group of closely related plants), and the second is the **species** (the exact kind of plant). We match on both words, because some plants in the same genus are native and good!
 - **Prohibited:** not common in Wisconsin yet. If we find it early, the DNR can stop it. These reports matter most!
 - **Restricted:** already common in parts of Wisconsin. It's against the law to sell it, move it, or plant it.
+- **Endangered:** so few are left that the plant could disappear from Wisconsin. It's protected by law.
+- **Threatened:** likely to become endangered. Also protected by law.
 - **Not regulated:** some plants cause problems but aren't in Wisconsin's invasive plant law. Three on our list are like that: sweet clover, reed canary grass and common mullein. The app labels them honestly and says the DNR may not track them.
 - **Group:** some invasive plants have look-alike cousins (like four kinds of bush honeysuckle). One card covers the whole group and lists each kind.
 - **Confidence ("% sure"):** how sure the AI is about its guess. Under 20%, we say "The AI isn't sure."
@@ -88,6 +95,18 @@ They're real photos from Wikimedia Commons that photographers shared for anyone 
 
 **Bonus: Why are some plants "not regulated"?**
 Wisconsin's law (NR 40) lists the invasive plants people can't sell, move or plant. Some plants our team watches for, like sweet clover and reed canary grass, still crowd out native plants but aren't in that law. We kept them on our list and labeled them honestly, and we got their facts from the Minnesota DNR and Invasive.org.
+
+**Why do you have endangered plants too? Isn't the app about invasive plants?**
+They're two sides of the same problem. Invasive plants crowd out Wisconsin's own plants, and some of those are now endangered. The DNR wants reports of both, so one app helps with both.
+
+**Why does the app say "keep the spot secret"?**
+Some people dig up rare plants to sell or plant them. That's why the DNR keeps the spots of endangered plants secret. So for an endangered plant, our app leaves out the map link and reminds you: don't post the spot online, and only share it with the DNR.
+
+**Why does the AI only say "endangered" for its best guess?**
+Many common plants look like rare ones. When we tested a photo of common milkweed, the AI said 49% common milkweed and 40% prairie milkweed, which is threatened. If we counted every guess, we'd tell people their common milkweed is endangered! So for endangered plants we only use the AI's best guess. For invasive plants we count all its top guesses, because it's better to check a possible invasive than to miss one.
+
+**What if the AI thinks a garden flower is endangered?**
+Some protected plants are also sold for gardens. The AI can't tell a garden plant from a wild one, so the answer says: "Planted in a garden? Then you don't need to report it."
 
 **Bonus: Why show a list of plants first?**
 If you already know the plant, you don't need an AI: picking it from the list is 100% certain and faster. The list also teaches people what to watch for before they ever see one. The AI is there for when you're not sure.

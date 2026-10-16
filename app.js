@@ -1,7 +1,7 @@
 // ============================================================
-// Invasive Plant Reporter
-// Sections: 1 Screens and paths · 2 Buttons · 3 Watch list · 4 Photo · 5 Location
-//           6 Invasive list · 7 Plant ID · 8 Result · 9 Report · 10 Start
+// Wisconsin Plant Reporter
+// Sections: 1 Screens and paths · 2 Buttons · 3 Plant pages · 4 Photo · 5 Location
+//           6 Plant lists · 7 Plant ID · 8 Result · 9 Report · 10 Start
 // ============================================================
 
 
@@ -62,7 +62,8 @@ function openAbout() {
 function setUpButtons() {
   document.getElementById("about-button").addEventListener("click", openAbout);
   document.getElementById("home-about").addEventListener("click", openAbout);
-  document.getElementById("open-plant-list").addEventListener("click", openPlantList);
+  document.getElementById("open-plant-list").addEventListener("click", () => openList("plant-list"));
+  document.getElementById("open-endangered-list").addEventListener("click", () => openList("endangered-list"));
   document.getElementById("photo-start").addEventListener("click", startPhotoPath);
   document.getElementById("retry-button").addEventListener("click", identifyPhoto);
   document.getElementById("gps-button").addEventListener("click", findMe);
@@ -73,7 +74,7 @@ function setUpButtons() {
 }
 
 
-// ===== 3. Watch list (the front page) =====
+// ===== 3. Plant pages (invasive and endangered) =====
 
 // What the colored label on each plant says.
 const BADGE_WORDS = {
@@ -82,7 +83,17 @@ const BADGE_WORDS = {
   "depends-on-county": "Prohibited or restricted, depending on the county",
   "not-regulated": "Invasive, but not regulated by state law",
   mixed: "A group of look-alike plants: see each kind below",
+  endangered: "🌸 Endangered: protected by Wisconsin law",
+  threatened: "🌸 Threatened: protected by Wisconsin law",
 };
+
+// The warning on every endangered or threatened plant.
+const PROTECTED_WARNING = "Don't pick it or dig it up. It's protected by law.";
+
+// Endangered and threatened plants are protected by Wisconsin law.
+function isProtected(plant) {
+  return ["endangered", "threatened"].includes(plant.category);
+}
 
 // The short label next to each kind of plant in a group.
 const STATUS_WORDS = {
@@ -107,21 +118,21 @@ function categoryOf(item) {
   return categories.size === 1 ? [...categories][0] : "mixed";
 }
 
-// Make a photo tile for each front-page plant on the plant list page, credit each photo in the About box,
-// and show a few small photos on the "I know the plant" button.
-function showPlantTiles() {
-  const front = [...invasivePlants, ...plantGroups].filter((item) => item.frontPage).sort((a, b) => a.frontPage - b.frontPage);
+// Make a photo tile for each plant that has a frontPage number, in that order, and credit each photo
+// in the About box. The first 5 photos also go on the front-page button as small circles.
+function showTiles(items, gridId, photosId) {
+  const front = items.filter((item) => item.frontPage).sort((a, b) => a.frontPage - b.frontPage);
   for (const plant of front) {
-    document.getElementById("plant-grid").append(plantTile(plant));
+    document.getElementById(gridId).append(plantTile(plant));
     creditPhoto(plant);
   }
-  for (const plant of front.slice(0, 5)) addText(document.getElementById("choice-photos"), "img", "").src = plant.photo;
+  for (const plant of front.slice(0, 5)) addText(document.getElementById(photosId), "img", "").src = plant.photo;
 }
 
-// Open the plant list page.
-function openPlantList() {
-  document.getElementById("plant-list").showModal();
-  document.getElementById("plant-list").scrollTop = 0;
+// Open a plant page ("plant-list" for invasive plants, "endangered-list" for endangered plants).
+function openList(id) {
+  document.getElementById(id).showModal();
+  document.getElementById(id).scrollTop = 0;
 }
 
 // Build one small tile: a photo and the name. Tapping it opens the plant's pop-out card.
@@ -142,7 +153,7 @@ function plantTile(plant) {
 // The plant whose pop-out card is open.
 let shownPlant = null;
 
-// Open the pop-out card: big photo, label, any warning, how to spot it, and why it's a problem.
+// Open the pop-out card: big photo, label, any warning, how to spot it, and why it matters.
 function openPlantCard(plant) {
   shownPlant = plant;
   const body = document.getElementById("sheet-content");
@@ -153,9 +164,10 @@ function openPlantCard(plant) {
   const name = addText(body, "h2", plant.commonName);
   if (plant.scientificName) addText(body, "p", plant.scientificName, "science-name");
   addText(body, "p", BADGE_WORDS[categoryOf(plant)], "badge " + categoryOf(plant));
+  if (isProtected(plant)) addText(body, "p", "🚫 " + PROTECTED_WARNING, "warning");
   if (plant.warning) addText(body, "p", "⚠️ " + plant.warning, "warning");
   addText(addText(body, "p", ""), "strong", "Look for: ").after(plant.lookFor);
-  addText(addText(body, "p", ""), "strong", "Why it's a problem: ").after(plant.why);
+  addText(addText(body, "p", ""), "strong", isProtected(plant) ? "Why it needs help: " : "Why it's a problem: ").after(plant.why);
   if (plant.members) listKinds(body, plant);
   else addMoreInfoLink(body, plant);
   const sheet = document.getElementById("plant-sheet");
@@ -183,10 +195,11 @@ function addMoreInfoLink(parent, plant) {
   else if (plant.infoPage) addLink(parent, `More about it from ${plant.infoSource}`, plant.infoPage);
 }
 
-// "I found this" on the pop-out card: close the card and the plant list, and start the report.
+// "I found this" on the pop-out card: close the card and the plant page, and start the report.
 function reportShownPlant() {
   document.getElementById("plant-sheet").close();
   document.getElementById("plant-list").close();
+  document.getElementById("endangered-list").close();
   startKnownPath(shownPlant);
 }
 
@@ -365,7 +378,7 @@ async function readPhotoLocation(file) {
 }
 
 
-// ===== 6. Invasive list =====
+// ===== 6. Plant lists =====
 
 // The Wisconsin invasive plant list from invasive-plants.json. Empty (null) until it loads.
 let invasivePlants = null;
@@ -377,10 +390,25 @@ async function loadInvasiveList() {
     const list = await response.json();
     invasivePlants = list.plants;
     plantGroups = list.groups || [];
-    showPlantTiles();
+    showTiles([...invasivePlants, ...plantGroups], "plant-grid", "choice-photos");
   } catch {
     invasivePlants = null; // the result screen will say we couldn't check the list
     document.getElementById("plant-grid").textContent = "😕 Couldn't load the plant list. Check the internet and reload the page.";
+  }
+}
+
+// The Wisconsin endangered and threatened plant list from endangered-plants.json. Empty (null) until it loads.
+let endangeredPlants = null;
+
+// Load the endangered plant list from our JSON file, then show its plant tiles.
+async function loadEndangeredList() {
+  try {
+    const response = await fetch("endangered-plants.json", { cache: "no-cache" }); // always check for a newer list
+    endangeredPlants = (await response.json()).plants;
+    showTiles(endangeredPlants, "endangered-grid", "endangered-photos");
+  } catch {
+    endangeredPlants = null; // the result screen will say we couldn't check the list
+    document.getElementById("endangered-grid").textContent = "😕 Couldn't load the plant list. Check the internet and reload the page.";
   }
 }
 
@@ -391,12 +419,17 @@ function shortName(name) {
   return words.filter((word) => word && word !== "x").slice(0, 2).join(" ");
 }
 
-// Look up a scientific name in the invasive list (also checking old names). Returns the plant, or null.
-function findInvasive(scientificName) {
+// Look up a scientific name in one plant list (also checking old names). Returns the plant, or null.
+function findIn(list, scientificName) {
   const wanted = shortName(scientificName);
-  if (!wanted.includes(" ") || !invasivePlants) return null; // need both genus and species
+  if (!wanted.includes(" ") || !list) return null; // need both genus and species
   const isMatch = (plant) => [plant.scientificName, ...plant.otherNames].some((name) => shortName(name) === wanted);
-  return invasivePlants.find(isMatch) || null;
+  return list.find(isMatch) || null;
+}
+
+// Look up a scientific name in both lists: the invasive list, then the endangered list.
+function findPlant(scientificName) {
+  return findIn(invasivePlants, scientificName) || findIn(endangeredPlants, scientificName);
 }
 
 
@@ -485,7 +518,7 @@ async function identifyPhoto() {
 // ===== 8. Result =====
 
 // What we know about the plant: { kind, guess, plant }. The report screen uses this.
-// kind is "known" (picked from the list), or the AI's answer: "invasive", "not-listed", "not-sure" or "no-list".
+// kind is "known" (picked from a list), or the AI's answer: "invasive", "endangered", "not-listed", "not-sure" or "no-list".
 let decision = null;
 
 // What each list category means, in plain words.
@@ -494,6 +527,8 @@ const CATEGORY_WORDS = {
   restricted: "RESTRICTED in Wisconsin. It's already found in parts of the state.",
   "depends-on-county": "Prohibited or restricted in Wisconsin, depending on the county.",
   "not-regulated": "Invasive, but NOT regulated by Wisconsin law, so the DNR may not track it.",
+  endangered: "ENDANGERED in Wisconsin: very few are left. It's protected by law.",
+  threatened: "THREATENED in Wisconsin: it could become endangered. It's protected by law.",
 };
 
 // Change the tip at the top of the result screen.
@@ -529,11 +564,17 @@ function percent(score) {
   return score < 0.01 ? "less than 1%" : Math.round(score * 100) + "%";
 }
 
-// Decide what to tell the user. If ANY top guess is on the list (and the AI is at least a little sure), it's a possible invasive.
+// Decide what to tell the user (the AI must be at least a little sure):
+// - Endangered: only if it's the AI's BEST guess. Many common plants look like rare ones
+//   (like common milkweed and prairie milkweed), so we don't want false alarms.
+// - Invasive: if ANY of the top guesses is on the list. Better safe than sorry.
 function decide(guesses) {
-  if (!invasivePlants) return { kind: "no-list", guess: guesses[0] || null, plant: null };
-  const invasiveGuess = guesses.find((guess) => guess.score >= LOW_CONFIDENCE && findInvasive(guess.scientificName));
-  if (invasiveGuess) return { kind: "invasive", guess: invasiveGuess, plant: findInvasive(invasiveGuess.scientificName) };
+  if (!invasivePlants || !endangeredPlants) return { kind: "no-list", guess: guesses[0] || null, plant: null };
+  const best = guesses[0];
+  const endangered = best && best.score >= LOW_CONFIDENCE && findIn(endangeredPlants, best.scientificName);
+  if (endangered) return { kind: "endangered", guess: best, plant: endangered };
+  const invasiveGuess = guesses.find((guess) => guess.score >= LOW_CONFIDENCE && findIn(invasivePlants, guess.scientificName));
+  if (invasiveGuess) return { kind: "invasive", guess: invasiveGuess, plant: findIn(invasivePlants, invasiveGuess.scientificName) };
   if (guesses.length && guesses[0].score >= LOW_CONFIDENCE) return { kind: "not-listed", guess: guesses[0], plant: null };
   return { kind: "not-sure", guess: guesses[0] || null, plant: null };
 }
@@ -546,6 +587,7 @@ function showResult() {
   card.replaceChildren();
   card.className = "card " + decision.kind;
   if (decision.kind === "invasive") fillInvasiveCard(card, decision);
+  else if (decision.kind === "endangered") fillEndangeredCard(card, decision);
   else fillOtherCard(card, decision);
   card.hidden = false;
   showGuesses();
@@ -565,22 +607,33 @@ function fillInvasiveCard(card, { guess, plant }) {
   addText(card, "p", `The AI is ${percent(guess.score)} sure. It can be wrong, so the DNR makes the final call.`, "hint");
 }
 
+// Fill the card for a possible endangered or threatened plant.
+function fillEndangeredCard(card, { guess, plant }) {
+  addText(card, "h3", `🌸 Possible ${plant.category} plant!`);
+  addText(card, "p", plant.commonName, "plant-name");
+  addText(card, "p", plant.scientificName, "science-name");
+  addText(card, "p", "🚫 " + PROTECTED_WARNING, "warning");
+  addText(card, "p", CATEGORY_WORDS[plant.category]);
+  addText(card, "p", "Planted in a garden? Then you don't need to report it. The DNR wants to know about wild ones.", "hint");
+  addText(card, "p", `The AI is ${percent(guess.score)} sure. It can be wrong, so the DNR makes the final call.`, "hint");
+}
+
 // Fill the card when it's not on the list, the AI isn't sure, or we couldn't check the list.
 function fillOtherCard(card, { kind, guess }) {
   const titles = {
-    "not-listed": "✅ Not on Wisconsin's invasive list",
+    "not-listed": "✅ Not on our invasive or endangered lists",
     "not-sure": "🤔 The AI isn't sure",
-    "no-list": "😕 We couldn't check the invasive list",
+    "no-list": "😕 We couldn't check our plant lists",
   };
   addText(card, "h3", titles[kind]);
   if (!guess) {
     addText(card, "p", "The AI couldn't find a plant in this photo. Go back and try a closer photo of the leaves or flowers.");
   } else {
     addText(card, "p", `Its best guess is ${guess.commonName} (${guess.scientificName}), ${percent(guess.score)} sure.`);
-    if (kind === "not-listed") addText(card, "p", "That plant isn't on our list of Wisconsin invasive plants.");
+    if (kind === "not-listed") addText(card, "p", "That plant isn't on our lists of Wisconsin invasive or endangered plants.");
     if (kind === "not-sure") addText(card, "p", "That's a low score. A closer photo of the leaves or flowers can help.");
   }
-  addText(card, "p", "Still think it's invasive? You can report it anyway.", "hint");
+  addText(card, "p", "Still think it's invasive or endangered? You can report it anyway.", "hint");
 }
 
 // Show the AI's top guesses, each with a bar showing how sure it is.
@@ -590,7 +643,8 @@ function showGuesses() {
   for (const guess of guesses) {
     const item = document.createElement("li");
     addText(item, "span", guess.commonName, "guess-name");
-    if (findInvasive(guess.scientificName)) addText(item, "span", "On WI list", "tag");
+    const listed = findPlant(guess.scientificName);
+    if (listed) addText(item, "span", isProtected(listed) ? "Endangered list" : "Invasive list", "tag " + (isProtected(listed) ? "protected" : ""));
     addText(item, "span", guess.scientificName, "science-name");
     const bar = addText(item, "span", "", "bar");
     addText(bar, "span", "").style.width = Math.max(2, Math.round(guess.score * 100)) + "%";
@@ -603,21 +657,39 @@ function showGuesses() {
 
 // ===== 9. Report =====
 
-// The DNR's main page about invasive species, for plants that aren't on our list.
+// The DNR's main pages about invasive species and endangered plants, for plants without their own page.
 const DNR_INVASIVES_PAGE = "https://dnr.wisconsin.gov/topic/Invasives";
+const DNR_ENDANGERED_PAGE = "https://dnr.wisconsin.gov/topic/EndangeredResources/ETList";
 
-// Fill in the report screen: how sure we are, the details to copy, the map link, and the right DNR page.
+// Where to report: the DNR's invasive species page, or the DNR's rare species form for endangered plants.
+const INVASIVE_REPORT_PAGE = "https://dnr.wisconsin.gov/topic/Invasives/report";
+const ENDANGERED_REPORT_FORM = "https://survey123.arcgis.com/share/f57cba58511a4c99b1d1292776b05125";
+
+// Is this report about an endangered or threatened plant? Then its spot stays secret.
+function isSecretSpot() {
+  return Boolean(decision && decision.plant && isProtected(decision.plant));
+}
+
+// Fill in the report screen: how sure we are, the details to copy, the map link, and the right DNR pages.
 function updateReportScreen() {
-  const plant = decision && decision.plant;
   document.getElementById("report-tip").textContent = reportTip();
+  document.getElementById("secret-note").hidden = !isSecretSpot();
   document.getElementById("report-details").textContent = reportDetails();
+  document.getElementById("spot-map").hidden = isSecretSpot(); // no map link for endangered plants
   if (plantLocation) document.getElementById("spot-map").href = mapLink();
+  document.getElementById("report-link").href = isSecretSpot() ? ENDANGERED_REPORT_FORM : INVASIVE_REPORT_PAGE;
+  showLearnLink(decision && decision.plant);
+}
+
+// The "Learn about…" link: the plant's own page, or the DNR's main page for its kind of plant.
+function showLearnLink(plant) {
   const link = document.getElementById("dnr-link");
-  link.href = (plant && (plant.dnrPage || plant.infoPage)) || DNR_INVASIVES_PAGE;
-  link.textContent = !plant || plant.members ? "🌐 Learn about invasive plants on the DNR website"
+  const ownPage = plant && !plant.members && (plant.dnrPage || plant.infoPage);
+  const endangered = plant && isProtected(plant);
+  link.href = ownPage || (endangered ? DNR_ENDANGERED_PAGE : DNR_INVASIVES_PAGE);
+  link.textContent = !ownPage ? `🌐 Learn about ${endangered ? "endangered" : "invasive"} plants on the DNR website`
     : plant.dnrPage ? `🌐 Learn about ${plant.commonName} on the DNR website`
-    : plant.infoPage ? `🌐 Learn about ${plant.commonName} (${plant.infoSource})`
-    : "🌐 Learn about invasive plants on the DNR website";
+    : `🌐 Learn about ${plant.commonName} (${plant.infoSource})`;
 }
 
 // One sentence that says how sure we are about the plant.
@@ -625,9 +697,10 @@ function reportTip() {
   const { kind, guess, plant } = decision || {};
   const notTracked = plant && categoryOf(plant) === "not-regulated"
     ? " This plant isn't regulated by state law, so the DNR may not track it. You can also tell whoever takes care of the land." : "";
-  if (kind === "known") return `You picked ${plant.commonName} from the list. Thanks for watching out!` + notTracked;
-  if (kind === "invasive") return `The AI thinks this may be ${plant.commonName} (${percent(guess.score)} sure). The DNR will check.` + notTracked;
-  return "The AI didn't match this to our invasive list. If you still think it's invasive, you can report it anyway.";
+  const thanks = isProtected(plant || {}) ? "Thanks for helping protect it!" : "Thanks for watching out!";
+  if (kind === "known") return `You picked ${plant.commonName} from the list. ${thanks}` + notTracked;
+  if (plant) return `The AI thinks this may be ${plant.commonName} (${percent(guess.score)} sure). The DNR will check.` + notTracked;
+  return "The AI didn't match this to our lists. If you still think it's invasive, you can report it anyway.";
 }
 
 // The plant's name for the report, like "Garlic mustard (Alliaria petiolata)". A group lists all its kinds.
@@ -641,10 +714,12 @@ function reportDetails() {
   const { kind, guess, plant } = decision || {};
   const name = plant ? plantNameForReport(plant) : guess ? `Not sure. AI's best guess: ${guess.commonName} (${guess.scientificName})` : "Not sure";
   const how = kind === "known" ? "I recognized it" : guess ? `Pl@ntNet AI guess, ${percent(guess.score)} sure` : "The AI couldn't tell";
-  const lines = ["Possible invasive plant: " + name, "How I know: " + how];
+  const kindOfPlant = isSecretSpot() ? plant.category : "invasive";
+  const lines = [`Possible ${kindOfPlant} plant: ${name}`, "How I know: " + how];
   if (plantLocation) {
     const { lat, lon, source } = plantLocation;
-    lines.push(`Where: ${lat.toFixed(5)}, ${lon.toFixed(5)} (${LOCATION_SOURCE_WORDS[source]})`, "Map: " + mapLink());
+    lines.push(`Where: ${lat.toFixed(5)}, ${lon.toFixed(5)} (${LOCATION_SOURCE_WORDS[source]})`);
+    if (!isSecretSpot()) lines.push("Map: " + mapLink()); // endangered plant spots stay secret
   }
   lines.push("Date: " + new Date().toLocaleDateString("en-US", { dateStyle: "medium" }));
   return lines.join("\n");
@@ -701,6 +776,7 @@ function start() {
   setUpButtons();
   setUpPhotoButtons();
   loadInvasiveList();
+  loadEndangeredList();
   showScreen("home");
 }
 
