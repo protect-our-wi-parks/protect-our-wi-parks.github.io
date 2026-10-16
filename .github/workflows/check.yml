@@ -22,7 +22,7 @@ jobs:
       - name: Check plant-helper.js for typos
         run: node --check --input-type=module < plant-helper.js
 
-      - name: Check the plant list, the front-page plants, and that no secret key was pasted in
+      - name: Check the plant lists, the plant cards, and that no secret key was pasted in
         run: |
           node <<'EOF'
           const fs = require("fs");
@@ -73,18 +73,41 @@ jobs:
             if (!group.why) problem("invasive-plants.json", `${group.commonName}: "why" (one sentence) is missing.`);
           }
 
-          // The plant list cards (plants and groups): each needs its place, a "Look for" line, a photo that exists, and a credit.
-          const places = new Set();
-          for (const plant of [...((list && list.plants) || []), ...groups].filter((p) => "frontPage" in p)) {
+          // A plant card needs its place, a "Look for" line, a "why" line, a photo that exists, and a credit.
+          function checkCard(file, plant, places) {
             const name = plant.commonName || "a plant";
-            if (!Number.isInteger(plant.frontPage) || places.has(plant.frontPage)) problem("invasive-plants.json", `${name}: frontPage must be a whole number that no other plant uses.`);
+            if (!Number.isInteger(plant.frontPage) || places.has(plant.frontPage)) problem(file, `${name}: frontPage must be a whole number that no other plant uses.`);
             places.add(plant.frontPage);
-            if (!plant.lookFor) problem("invasive-plants.json", `${name}: "lookFor" (how to spot it) is missing.`);
-            if (!plant.photo || !fs.existsSync(plant.photo)) problem("invasive-plants.json", `${name}: the photo "${plant.photo}" is missing. Upload it to the photos folder.`);
-            else if (!/\.(jpe?g|png)$/i.test(plant.photo)) problem("invasive-plants.json", `${name}: the photo must be a .jpg, .jpeg or .png file (take a screenshot of it and upload that).`);
-            if (!plant.photoCredit || !plant.photoCreditUrl) problem("invasive-plants.json", `${name}: photoCredit and photoCreditUrl (who took the photo) are needed.`);
+            if (!plant.lookFor) problem(file, `${name}: "lookFor" (how to spot it) is missing.`);
+            if (!plant.why) problem(file, `${name}: "why" (one sentence) is missing.`);
+            if (!plant.photo || !fs.existsSync(plant.photo)) problem(file, `${name}: the photo "${plant.photo}" is missing. Upload it to the photos folder.`);
+            else if (!/\.(jpe?g|png)$/i.test(plant.photo)) problem(file, `${name}: the photo must be a .jpg, .jpeg or .png file (take a screenshot of it and upload that).`);
+            if (!plant.photoCredit || !plant.photoCreditUrl) problem(file, `${name}: photoCredit and photoCreditUrl (who took the photo) are needed.`);
           }
-          console.log(`Checked ${places.size} front-page plants.`);
+
+          // The invasive plant cards (plants and groups).
+          const places = new Set();
+          for (const plant of [...((list && list.plants) || []), ...groups].filter((p) => "frontPage" in p)) checkCard("invasive-plants.json", plant, places);
+          console.log(`Checked ${places.size} invasive plant cards.`);
+
+          // The endangered plant list: every plant needs its names and "endangered" or "threatened".
+          const rare = readJson("endangered-plants.json");
+          const rarePlaces = new Set();
+          for (const plant of (rare && rare.plants) || []) {
+            const name = plant.commonName || plant.scientificName || "a plant";
+            if (!plant.scientificName || !plant.scientificName.includes(" ")) problem("endangered-plants.json", `${name}: scientificName needs two words, like "Camassia scilloides".`);
+            if (!Array.isArray(plant.otherNames)) problem("endangered-plants.json", `${name}: otherNames must be a list, like [] or ["Old name"].`);
+            if (!plant.commonName) problem("endangered-plants.json", `${name}: commonName is missing.`);
+            if (!["endangered", "threatened"].includes(plant.category)) problem("endangered-plants.json", `${name}: category must be endangered or threatened.`);
+            if (plant.dnrPage && !/^https:\/\/apps\.dnr\.wi\.gov\/biodiversity\/Home\/detail\/plants\/\d+$/.test(plant.dnrPage)) problem("endangered-plants.json", `${name}: dnrPage should look like https://apps.dnr.wi.gov/biodiversity/Home/detail/plants/1234`);
+            for (const n of [plant.scientificName, ...(plant.otherNames || [])]) {
+              const key = String(n).toLowerCase();
+              if (seen.has(key)) problem("endangered-plants.json", `${n} is listed twice (maybe also in invasive-plants.json).`);
+              seen.add(key);
+            }
+            if ("frontPage" in plant) checkCard("endangered-plants.json", plant, rarePlaces);
+          }
+          if (rare) console.log(`Checked ${rare.plants.length} endangered and threatened plants, ${rarePlaces.size} with cards.`);
 
           // Version stickers: style.css?v= and app.js?v= in index.html should have the same number.
           const page = fs.readFileSync("index.html", "utf8");
@@ -92,7 +115,7 @@ jobs:
           if (!css || css !== js) problem("index.html", `The version stickers don't match (style.css?v=${css}, app.js?v=${js}). Use the same number for both.`);
 
           // Safety: a Pl@ntNet key must never be in our public code. It belongs only in Cloudflare.
-          for (const file of ["app.js", "index.html", "style.css", "plant-helper.js", "invasive-plants.json", "README.md", "EXPLAIN.md"]) {
+          for (const file of ["app.js", "index.html", "style.css", "plant-helper.js", "invasive-plants.json", "endangered-plants.json", "README.md", "EXPLAIN.md"]) {
             if (/2b10[A-Za-z0-9]{18,}/.test(fs.readFileSync(file, "utf8"))) problem(file, "This looks like a Pl@ntNet key! Remove it right away and tell an adult to make a new key. Keys only go in Cloudflare.");
           }
 

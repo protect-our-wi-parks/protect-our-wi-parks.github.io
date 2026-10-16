@@ -103,7 +103,7 @@ main > section h2 {
   font-size: 17px;
 }
 
-/* The two big choices on the front page. */
+/* The three big choices on the front page. */
 .choices {
   display: flex;
   flex-direction: column;
@@ -134,7 +134,7 @@ main > section h2 {
   font-size: 17px;
 }
 
-/* A few small round plant photos on the "I know the plant" button. */
+/* A few small round plant photos on the "Invasive plants" and "Endangered plants" buttons. */
 .choice-photos {
   display: flex;
   gap: 6px;
@@ -147,8 +147,9 @@ main > section h2 {
   object-fit: cover;
 }
 
-/* The plant list: a pop-up page that fills the screen. */
-#plant-list {
+/* The plant pages (invasive and endangered): pop-up pages that fill the screen. */
+#plant-list,
+#endangered-list {
   box-sizing: border-box; /* the padding goes inside the 100% width, so nothing spills off the screen */
   width: 100%;
   max-width: 600px;
@@ -308,6 +309,15 @@ main > section h2 {
 
 .badge.mixed {
   background: #1565c0;
+}
+
+/* Pink = endangered, teal = threatened. Both are protected by law. */
+.badge.endangered {
+  background: #ad1457;
+}
+
+.badge.threatened {
+  background: #00695c;
 }
 
 /* The list of kinds on a group's card. */
@@ -473,6 +483,11 @@ h3 {
   background: #fff4e5;
 }
 
+.card.endangered {
+  border-color: #ad1457;
+  background: #fce4ec;
+}
+
 .card.not-listed {
   border-color: var(--green);
 }
@@ -515,7 +530,7 @@ h3 {
   font-weight: bold;
 }
 
-/* "On WI list" label next to a guess. */
+/* "Invasive list" or "Endangered list" label next to a guess. Pink for endangered. */
 #guesses .tag {
   display: inline-block;
   margin-left: 4px;
@@ -525,6 +540,10 @@ h3 {
   color: white;
   font-size: 14px;
   font-weight: bold;
+}
+
+#guesses .tag.protected {
+  background: #ad1457;
 }
 
 /* The bar that shows how sure the AI is. */
@@ -638,6 +657,29 @@ dialog p {
 
   .hero h2 {
     font-size: 22px;
+  }
+
+  /* Smaller buttons and photos, so all three front-page choices fit on the screen. */
+  .choices {
+    gap: 10px;
+  }
+
+  .choice {
+    gap: 4px;
+    padding: 10px 14px;
+  }
+
+  .choice strong {
+    font-size: 20px;
+  }
+
+  .choice > span:not(.choice-photos) {
+    font-size: 16px;
+  }
+
+  .choice-photos img {
+    width: 36px;
+    height: 36px;
   }
 
   .plant-tile {

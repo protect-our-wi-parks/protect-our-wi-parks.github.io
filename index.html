@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="theme-color" content="#2e7d32">
-  <title>Invasive Plant Reporter</title>
+  <title>Wisconsin Plant Reporter</title>
   <!-- The little leaf icon on the browser tab, drawn from an emoji so we don't need an image file. -->
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌿</text></svg>">
   <!-- Leaflet draws the map. exifr reads the hidden GPS info inside photos.
@@ -17,31 +17,35 @@
           integrity="sha384-KRanV2NRwHPanp7iM6nlLQC5jPCTscSYMko30dLJHzNXJaUNtcucWv+SOi3jV3PE" crossorigin="anonymous" defer></script>
   <!-- The ?v= number is a version sticker. When you change style.css or app.js, add 1 to it (in both places),
        so phones download the new file instead of reusing an old saved copy. -->
-  <link rel="stylesheet" href="style.css?v=5">
-  <script src="app.js?v=5" defer></script>
+  <link rel="stylesheet" href="style.css?v=6">
+  <script src="app.js?v=6" defer></script>
 </head>
 <body>
   <header>
-    <h1>🌿 <span class="wide-only">Invasive </span>Plant Reporter</h1>
+    <h1>🌿 <span class="wide-only">Wisconsin </span>Plant Reporter</h1>
     <button id="about-button" class="icon-button" aria-label="About this app">ℹ️</button>
   </header>
 
   <main>
-    <!-- Front page: two big choices. The plants themselves are on a pop-up page, so this page stays short. -->
+    <!-- Front page: three big choices. The plants themselves are on pop-up pages, so this page stays short. -->
     <section id="screen-home">
       <div class="hero">
-        <h2>Watch out for these invasive plants!</h2>
-        <p>If you see one, report it to the Wisconsin DNR.</p>
+        <h2>Watch for these plants in Wisconsin!</h2>
       </div>
       <div class="choices">
         <button class="choice" id="open-plant-list">
           <span id="choice-photos" class="choice-photos"></span>
-          <strong>🌿 I know the plant</strong>
-          <span>See the invasive plants to watch for in Wisconsin. Pick yours and report it.</span>
+          <strong>🌿 Invasive plants</strong>
+          <span>Bad for nature. Spot one? Report it.</span>
+        </button>
+        <button class="choice" id="open-endangered-list">
+          <span id="endangered-photos" class="choice-photos"></span>
+          <strong>🌸 Endangered plants</strong>
+          <span>Rare and protected. Look, don't pick. Report it.</span>
         </button>
         <button class="choice" id="photo-start">
           <strong>📷 Not sure what it is?</strong>
-          <span>Take a photo and our plant AI will help.</span>
+          <span>Take a photo. We'll help.</span>
         </button>
       </div>
       <p><button class="link-button" id="home-about">How does this app work?</button></p>
@@ -64,7 +68,7 @@
           </label>
         </div>
         <button class="big" id="photo-next" data-go="next" hidden>Next →</button>
-        <button class="small" data-go="back">← Back to the plant list</button>
+        <button class="small" data-go="back">← Back</button>
       </div>
     </section>
 
@@ -107,6 +111,7 @@
       <p class="step"></p>
       <h2>Report it to the DNR</h2>
       <p id="report-tip"></p>
+      <p id="secret-note" class="warning" hidden>🤫 Keep the spot secret. Don't post it online, and don't pick the plant. Only share the spot with the DNR.</p>
       <ol class="todo">
         <li>Tap <strong>📋 Copy details</strong>.</li>
         <li>Tap <strong>📮 Report on the DNR website</strong> and follow their steps. Paste the details, and add your photo if you have one.</li>
@@ -119,13 +124,13 @@
       <p><a id="dnr-link" target="_blank" rel="noopener">🌐 Learn more on the DNR website</a></p>
       <p><button class="link-button" id="start-over">🔁 Check another plant</button></p>
       <div class="actions">
-        <a class="big button-link" href="https://dnr.wisconsin.gov/topic/Invasives/report" target="_blank" rel="noopener">📮 Report on the DNR website</a>
+        <a class="big button-link" id="report-link" href="https://dnr.wisconsin.gov/topic/Invasives/report" target="_blank" rel="noopener">📮 Report on the DNR website</a>
         <button class="small" data-go="back">← Back</button>
       </div>
     </section>
   </main>
 
-  <!-- The plant list: a pop-up page with all the front-page plants as photo tiles. -->
+  <!-- The invasive plants page: a pop-up page with the invasive plants as photo tiles. -->
   <dialog id="plant-list">
     <div class="page-top">
       <h2>Pick the plant you found</h2>
@@ -137,7 +142,20 @@
       <a href="https://dnr.wisconsin.gov/topic/Invasives/RegulatedSpecies" target="_blank" rel="noopener">See every regulated species on the DNR website</a>.</p>
   </dialog>
 
-  <!-- The pop-out card for one plant. It opens when you tap a plant on the front page. -->
+  <!-- The endangered plants page: a pop-up page with endangered and threatened plants as photo tiles. -->
+  <dialog id="endangered-list">
+    <div class="page-top">
+      <h2>Endangered plants</h2>
+      <form method="dialog"><button class="small" value="close">✕ Close</button></form>
+    </div>
+    <p class="hint">These plants are protected by Wisconsin law. Look and take photos, but don't pick them. Tap a plant to see how to spot it.</p>
+    <div id="endangered-grid" class="plant-grid"></div>
+    <p class="hint">Found one that's not here?
+      <a href="https://survey123.arcgis.com/share/f57cba58511a4c99b1d1292776b05125" target="_blank" rel="noopener">Report it on the DNR's rare plant form</a>.
+      <a href="https://dnr.wisconsin.gov/topic/EndangeredResources/ETList" target="_blank" rel="noopener">See every endangered and threatened plant on the DNR website</a>.</p>
+  </dialog>
+
+  <!-- The pop-out card for one plant. It opens when you tap a plant on a plant page. -->
   <dialog id="plant-sheet">
     <div id="sheet-content" class="sheet-content"></div>
     <form method="dialog" class="sheet-buttons">
@@ -153,13 +171,14 @@
 
       <h3>What it does</h3>
       <p>It shows you <strong>invasive</strong> plants to watch for in Wisconsin (plants from other places that crowd out
-        Wisconsin's own plants) and helps you report one to the Wisconsin DNR when you see it.</p>
+        Wisconsin's own plants) and <strong>endangered</strong> plants (Wisconsin's own plants that are almost gone),
+        and helps you report one to the Wisconsin DNR when you see it.</p>
 
       <h3>How to use it</h3>
       <ul>
-        <li><strong>You know the plant:</strong> tap <strong>I know the plant</strong>, pick it from the list, then <strong>I found this: report it</strong>. Show where it is, then report it.</li>
+        <li><strong>You know the plant:</strong> tap <strong>Invasive plants</strong> or <strong>Endangered plants</strong>, pick it, then <strong>I found this: report it</strong>. Show where it is, then report it.</li>
         <li><strong>You're not sure:</strong> tap <strong>Not sure what it is?</strong> and take a photo. The Pl@ntNet AI guesses the plant,
-          we check Wisconsin's invasive list, then you can report it.</li>
+          we check Wisconsin's invasive and endangered lists, then you can report it.</li>
         <li><strong>Reporting:</strong> we show the plant and the exact spot so you can copy them, then open the DNR's own report page.</li>
       </ul>
 
@@ -169,25 +188,30 @@
 
       <h3>Stay safe</h3>
       <p>Don't touch plants you don't know. Wild parsnip and giant hogweed can burn skin, and poison hemlock is very
-        poisonous. Explore with an adult and stay on public land.</p>
+        poisonous. Never pick or dig up endangered plants: they're protected by law. Explore with an adult and stay on public land.</p>
 
       <h3>Where your photo and location go</h3>
       <ul>
         <li>If you use the plant AI, your <strong>photo</strong> is made smaller and sent through our plant helper to Pl@ntNet
           to be identified. Nothing is saved, and there's no login.</li>
         <li>Your <strong>location</strong> stays on your phone. We show it to you at the end so you can copy it into your DNR report.
-          It only leaves your phone if you open the map link or paste it into your report.</li>
+          It only leaves your phone if you open the map link or paste it into your report. For endangered plants there's no map link:
+          keep their spots secret and only share them with the DNR.</li>
         <li>The <strong>map pictures</strong> come from OpenStreetMap, so they can tell roughly which area you're looking at.</li>
       </ul>
 
       <h3>Reporting to the DNR</h3>
-      <p>This app never sends anything by itself. You copy the details and report through the DNR's own page:
-        <a href="https://dnr.wisconsin.gov/topic/Invasives/report" target="_blank" rel="noopener">DNR: Report invasive species</a></p>
+      <p>This app never sends anything by itself. You copy the details and report through the DNR's own pages:
+        <a href="https://dnr.wisconsin.gov/topic/Invasives/report" target="_blank" rel="noopener">DNR: Report invasive species</a> and
+        <a href="https://survey123.arcgis.com/share/f57cba58511a4c99b1d1292776b05125" target="_blank" rel="noopener">DNR: Report a rare plant</a></p>
 
       <h3>Sources and credits</h3>
       <ul id="credits">
         <li>Invasive plant list: Wisconsin rule
           <a href="https://docs.legis.wisconsin.gov/code/admin_code/nr/001/40" target="_blank" rel="noopener">NR 40</a> (November 2024).</li>
+        <li>Endangered plant list: Wisconsin rule
+          <a href="https://docs.legis.wisconsin.gov/code/admin_code/nr/001/27/03" target="_blank" rel="noopener">NR 27</a>.
+          How to spot them: the DNR's <a href="https://apps.dnr.wi.gov/biodiversity/Home/index/plants" target="_blank" rel="noopener">rare plants website</a>.</li>
         <li>Plant AI: <a href="https://plantnet.org" target="_blank" rel="noopener">Pl@ntNet</a>.</li>
         <li>Map: <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">© OpenStreetMap</a> contributors,
           drawn with <a href="https://leafletjs.com" target="_blank" rel="noopener">Leaflet</a>.</li>
