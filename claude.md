@@ -1,4 +1,4 @@
-# FLL Invasive Plant Reporter
+# FLL Wisconsin Plant Reporter (invasive + endangered plants)
 
 ## Who this is for
 A FIRST LEGO League team (kids ages 9–14) building their Innovation Project. The kids must be able to explain every file to judges. Simplicity beats cleverness.
@@ -19,8 +19,9 @@ A FIRST LEGO League team (kids ages 9–14) building their Innovation Project. T
 
 ## Safety and privacy
 - This repo will be PUBLIC (free GitHub Pages hosting). Never put names, school, team name, addresses, or anyone's location in code, comments, commits, or sample data.
+- Endangered plant spots are secret. Never put where an endangered plant grows anywhere in the repo, and only use photos whose source page doesn't name a Wisconsin location. Endangered reports have no map link and say "Keep the spot secret".
 - Never commit API keys. The Pl@ntNet key lives only in Cloudflare, as the `PLANTNET_KEY` secret of the `plant-helper` worker. Explain where the key lives and its risk.
-- The app never sends anything to the DNR (no email, no forms). The report screen shows the details to copy and opens the DNR's official report page; people report through the DNR's own channel.
+- The app never sends anything to the DNR (no email, no forms). The report screen shows the details to copy and opens the DNR's official report page (the invasive species page, or the DNR's rare species form for endangered plants); people report through the DNR's own channel.
 
 ## Running it
 - Local: `python3 -m http.server` then open http://localhost:8000

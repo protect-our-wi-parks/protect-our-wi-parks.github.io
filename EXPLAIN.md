@@ -33,7 +33,7 @@ There are two paths:
 | `index.html` | The skeleton: all the screens (front page, photo, map, AI answer, report) plus the pop-up plant list are on one page, and we show one at a time. |
 | `style.css` | The clothes: colors, big buttons, and making it fit on any phone. |
 | `app.js` | The brain: what happens when you tap each button. It has 10 labeled sections. |
-| `invasive-plants.json` | Our list of 30 Wisconsin invasive plants, copied from the state law called NR 40. |
+| `invasive-plants.json` | Our list of 41 invasive plants, mostly from the state law called NR 40. |
 | `plant-helper.js` | The plant helper. It runs in the cloud (on Cloudflare), keeps the AI key locked up, and passes photos to Pl@ntNet. |
 | `endangered-plants.json` | Our list of Wisconsin's endangered and threatened plants, from the state's law (NR 27). |
 | `photos/` | The plant photos on the two plant pages. |
@@ -62,7 +62,7 @@ There are two paths:
 Pl@ntNet learned from millions of plant photos that scientists and regular people labeled. It looks for patterns, like leaf shape and flower color, and compares them to what it learned. Then it gives its top guesses and a score for how sure it is.
 
 **What if it's wrong?**
-It can be wrong! That's why we always say "**possible** invasive plant" and show how sure the AI is. If it's less than 20% sure, we say "The AI isn't sure." A real expert at the DNR makes the final decision. And if you already know the plant, you don't need the AI at all: tap **I know the plant** and pick it from the list.
+It can be wrong! That's why we always say "**possible** invasive plant" and show how sure the AI is. If it's less than 20% sure, we say "The AI isn't sure." A real expert at the DNR makes the final decision. And if you already know the plant, you don't need the AI at all: tap **Invasive plants** or **Endangered plants** and pick it from the list.
 
 **Where does my photo go?**
 If you pick a plant from the list, there's no photo at all. If you use the AI, the photo stays on your phone until the AI step. Then a smaller copy goes through our plant helper to Pl@ntNet to be identified. The helper only passes it along and saves nothing (you can read all of its code in `plant-helper.js`). There's no database, so we never keep your photo. Your location stays on your phone. We show it to you on the last screen so you can copy it into your report. It only leaves your phone if you tap **See this spot on a map** (that opens OpenStreetMap at that spot) or paste it into your DNR report yourself. (Drawing the map means downloading map pictures of your area from OpenStreetMap.)
@@ -74,14 +74,15 @@ A login means storing people's names and passwords, and keeping those safe is a 
 If the app sent reports by itself, the DNR could get reports from every practice run and every wrong guess. Instead, the app gets everything ready (the plant, how you know, and the exact spot) and opens the DNR's official report page. A person checks it and sends it the DNR's own way.
 
 **How does this help the DNR?**
-More people learn what invasive plants look like, from the plant list. And when someone spots one, they can report it with the exact location in a couple of taps. The DNR gets better reports, and the most dangerous plants (like giant hogweed) are clearly marked "report it right away."
+More people learn what invasive and endangered plants look like, from the plant pages. When someone spots one, they can report it with the exact location in a couple of taps. The DNR gets better reports, the most dangerous invasive plants (like giant hogweed) are clearly marked "report it right away," and endangered plant reports go to the DNR's rare species experts with the spot kept secret.
 
 **How would you make it better?**
 - Add more plants to the list (the law lists over 100!)
 - Figure out the county, so we can say "prohibited" or "restricted" exactly
 - Work fully offline, even after the phone closes the app
 - Help people send a report straight to the DNR, with the photo and location filled in
-- Use our own team photos on the plant list
+- Use our own team photos on the plant pages
+- Add more endangered plant cards (the law lists 130 endangered and threatened plants)
 - Work in other states, using their invasive plant lists
 
 **Bonus: How do you keep the AI key safe?**

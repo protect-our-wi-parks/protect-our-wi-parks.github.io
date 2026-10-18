@@ -107,7 +107,7 @@ Phone camera and GPS only work on secure `https://` pages. A laptop on Wi-Fi ser
 3. In Terminal, in this folder (replace `USERNAME` and `REPO`):
    ```
    git add .
-   git commit -m "Invasive Plant Reporter"
+   git commit -m "Wisconsin Plant Reporter"
    git remote add origin https://github.com/USERNAME/REPO.git
    git push -u origin main
    ```
@@ -201,7 +201,7 @@ The other plants in `endangered-plants.json` have no card, but the AI still reco
 
 | Part | What it's for |
 |---|---|
-| `frontPage` | Its place on the plant list (1 = first). Every card needs a different number. Leave it out to hide the card; the AI still checks the plant. |
+| `frontPage` | Its place on its plant page (1 = first). Every card needs a different number. Leave it out to hide the card; the AI still checks the plant. |
 | `lookFor` | One or two short sentences on how to spot it (shown on the pop-out card, with `why`) |
 | `photo` | Its photo in the `photos/` folder |
 | `photoCredit`, `photoCreditUrl` | Who took the photo and its license. These show in the ℹ️ About box. |
@@ -212,7 +212,7 @@ The other plants in `endangered-plants.json` have no card, but the AI still reco
 
 **To use your own photo:**
 1. **Take a screenshot of your photo and upload the screenshot.** A phone photo usually has the exact spot where it was taken hidden inside it (that could be someone's home). A screenshot doesn't, and it's always a `.png` file that every browser can show. (iPhone photos are often `.heic`, which many browsers can't show. The robot checker only accepts `.jpg`, `.jpeg` or `.png`.)
-2. Only photos taken in a public place, never at a home or school, and with no people in them.
+2. Only photos taken in a public place, never at a home or school, and with no people in them. For an endangered plant, never write down where you saw it (not in the file name, the credit, or a commit message): those spots are kept secret.
 3. Keep it under 1 MB. Give it a simple name with no spaces, like `my-buckthorn.png`.
 4. Set `photoCredit` to `"Photo: our team"` and `photoCreditUrl` to `"https://github.com/wi-invasive-plants/wi-invasive-plants.github.io"`.
 
@@ -283,7 +283,7 @@ Three plants on our team's list are **not in NR 40**: sweet clover, reed canary 
    ```
 3. If it's dangerous to touch or eat, add `"warning": "Don't touch! ..."`.
 4. Put the plant's other scientific names in `otherNames`. The name Pl@ntNet uses is the most important one.
-5. To show it on the plant list too, add `frontPage` (a number no other card uses), `lookFor`, `photo`, `photoCredit` and `photoCreditUrl` (see "The plant pages" above). To put it in a group instead, add its scientific name to that group's `"members"`.
+5. To show it on the invasive plants page too, add `frontPage` (a number no other card uses), `lookFor`, `photo`, `photoCredit` and `photoCreditUrl` (see "The plant pages" above). To put it in a group instead, add its scientific name to that group's `"members"`.
 6. Reload the app. If something breaks, paste the file into https://jsonlint.com to find the missing comma.
 
 ## The endangered plant list
@@ -294,7 +294,7 @@ Three plants on our team's list are **not in NR 40**: sweet clover, reed canary 
 - `endangered`: so few are left that it could disappear from Wisconsin.
 - `threatened`: likely to become endangered.
 
-**What's in the file:** every plant in NR 27 that the AI can recognize (116 of them), so the AI can warn about any of them, not just the 12 with cards. Plants that NR 27 lists only as a *variety* or *subspecies* (like the sand violet, *Viola sagittata* var. *ovata*) are left out, because the AI can't tell varieties apart: it would call every common arrow-leaved violet "endangered."
+**What's in the file:** every plant in NR 27 that the AI can recognize (116 of the 130), so the AI can warn about any of them, not just the 12 with cards. Plants that NR 27 lists only as a *variety* or *subspecies* (like the sand violet, *Viola sagittata* var. *ovata*) are left out, because the AI can't tell varieties apart: it would call every common arrow-leaved violet "endangered."
 
 **Same rules as the invasive list:** matching uses the first two words of the scientific name, plus `otherNames` (for example, NR 27 says *Besseya bullii*, but the DNR and many apps now say *Synthyris bullii*). A plant card needs `frontPage`, `lookFor`, `why`, `photo`, `photoCredit` and `photoCreditUrl`. `dnrPage` is the plant's page on the DNR's rare plants website.
 
