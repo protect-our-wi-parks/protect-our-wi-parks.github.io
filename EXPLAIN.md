@@ -92,7 +92,7 @@ Our code is public on GitHub, so the key can't go there, because anyone could co
 Right on the GitHub website, from any computer. We click a file, click the pencil, make the change, and save. A robot checks our work for mistakes, and the live app updates by itself in about a minute.
 
 **Bonus: Where do the plant photos come from?**
-They're real photos from Wikimedia Commons that photographers shared for anyone to use. We credit each photographer in the app's ℹ️ About box, and we removed hidden data (like GPS) from the photos.
+They're real photos from Wikimedia Commons and iNaturalist that photographers shared for anyone to use. We credit each photographer in the app's ℹ️ About box, and we removed hidden data (like GPS) from the photos. For endangered plants, we only picked photos that don't show where in Wisconsin the plant grows.
 
 **Bonus: Why are some plants "not regulated"?**
 Wisconsin's law (NR 40) lists the invasive plants people can't sell, move or plant. Some plants our team watches for, like sweet clover and reed canary grass, still crowd out native plants but aren't in that law. We kept them on our list and labeled them honestly, and we got their facts from the Minnesota DNR and Invasive.org.
