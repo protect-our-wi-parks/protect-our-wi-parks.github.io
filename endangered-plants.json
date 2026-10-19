@@ -104,12 +104,12 @@
       "lookFor": "A hairy plant 1 to 2 feet tall with pale purple, trumpet-shaped flowers right next to the leaves. Its leaves grow in pairs and have hairy edges. It blooms from late May to October.",
       "why": "It grows in only a few prairies and oak woods in Wisconsin.",
       "photo": "photos/wild-petunia.jpg",
-      "photoCredit": "Photo: Sathiyaraj Durai, CC0, Wikimedia Commons",
-      "photoCreditUrl": "https://commons.wikimedia.org/wiki/File:A_view_of_white_Ruellia_humilis.jpg"
+      "photoCredit": "Photo: Paul, CC0, iNaturalist",
+      "photoCreditUrl": "https://www.inaturalist.org/photos/488097772"
     },
     {
       "scientificName": "Besseya bullii",
-      "otherNames": ["Synthyris bullii"],
+      "otherNames": ["Synthyris bullii", "Veronica bullii"],
       "commonName": "Kitten tails",
       "category": "threatened",
       "dnrPage": "https://apps.dnr.wi.gov/biodiversity/Home/detail/plants/8873",
@@ -117,8 +117,8 @@
       "lookFor": "A hairy stem 8 to 16 inches tall with a fuzzy spike of small yellow flowers, and big egg-shaped, toothed leaves at the bottom. It looks like a small common mullein. It blooms in late May and June.",
       "why": "It's rare all over the world. In Wisconsin it grows in small openings in woods and near the edges of bluffs.",
       "photo": "photos/kitten-tails.jpg",
-      "photoCredit": "Drawing: Britton and Brown (1913), public domain, Wikimedia Commons",
-      "photoCreditUrl": "https://commons.wikimedia.org/wiki/File:Veronica_bullii.jpg"
+      "photoCredit": "Photo: Erica Tava Johnson, CC BY 4.0, iNaturalist",
+      "photoCreditUrl": "https://www.inaturalist.org/photos/377768660"
     },
     {
       "scientificName": "Opuntia fragilis",

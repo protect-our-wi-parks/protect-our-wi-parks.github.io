@@ -210,7 +210,7 @@ The other plants in `endangered-plants.json` have no card, but the AI still reco
 
 **A group card** lives in `"groups"`. It has a `commonName` (like `"Bush honeysuckles"`), the same `frontPage`, `lookFor`, `why`, `photo`, `photoCredit` and `photoCreditUrl` parts, and `"members"`: the scientific names of its kinds. **Every kind must also be its own plant in `"plants"`** (with its own category and `dnrPage`), so the card can list it and the AI can recognize it by name. The robot checker tells you if a member is missing.
 
-**The photos** are real photos from [Wikimedia Commons](https://commons.wikimedia.org) with free licenses (CC0 or CC BY), credited to each photographer. Their hidden data, including any GPS, was removed.
+**The photos** are real photos from [Wikimedia Commons](https://commons.wikimedia.org) and [iNaturalist](https://www.inaturalist.org) with free licenses (CC0, CC BY or public domain), credited to each photographer. Their hidden data, including any GPS, was removed. For an endangered plant, we only use a photo whose page doesn't show a Wisconsin spot: on iNaturalist that means the location is hidden ("obscured") and it was taken outside Wisconsin. Two photos come from iNaturalist, from sightings that other experts confirmed: kitten tails (taken in Minnesota, exact spot hidden) and wild petunia (taken in Illinois, where it isn't rare).
 
 **To use your own photo:**
 1. **Take a screenshot of your photo and upload the screenshot.** A phone photo usually has the exact spot where it was taken hidden inside it (that could be someone's home). A screenshot doesn't, and it's always a `.png` file that every browser can show. (iPhone photos are often `.heic`, which many browsers can't show. The robot checker only accepts `.jpg`, `.jpeg` or `.png`.)
@@ -246,7 +246,7 @@ The other plants in `endangered-plants.json` have no card, but the AI still reco
 | [Leaflet](https://leafletjs.com/) 1.9.4 | Draws the map | cdnjs.cloudflare.com |
 | [exifr](https://github.com/MikeKovarik/exifr) 7.1.3 | Reads GPS saved inside photos | cdn.jsdelivr.net |
 | [OpenStreetMap](https://www.openstreetmap.org/copyright) | Map pictures (tiles) | tile.openstreetmap.org |
-| [Wikimedia Commons](https://commons.wikimedia.org) | Plant photos (CC0, CC BY and public domain) | stored in `photos/` |
+| [Wikimedia Commons](https://commons.wikimedia.org), [iNaturalist](https://www.inaturalist.org) | Plant photos (CC0, CC BY and public domain) | stored in `photos/` |
 | [Wisconsin DNR rare plant pages](https://apps.dnr.wi.gov/biodiversity/Home/index/plants) | "How to spot it" for the endangered plants | links in `endangered-plants.json` |
 | [Minnesota DNR](https://www.dnr.state.mn.us/invasives/terrestrialplants/index.html), [Invasive.org](https://www.invasive.org) | Facts for the 3 plants that aren't in Wisconsin's law (sweet clover, reed canary grass, common mullein) | links in `invasive-plants.json` |
 
@@ -314,4 +314,5 @@ Almost every plant in NR 27 is already in `endangered-plants.json` (the AI uses 
 - **Thistles and cattails:** Wisconsin also has native thistles and a native cattail (broad-leaved cattail). The AI matches only the invasive kinds by name, and the group cards explain how to tell them apart.
 - **Japanese barberry** and a few others: NR 40 exempts some garden varieties, and the app can't tell them apart from a photo.
 - **Dwarf lake iris** looks a lot like dwarf crested iris (*Iris cristata*), a garden iris. In our test, the AI's best guess for a dwarf lake iris photo was the garden iris, so the app said "not on our lists" (the guess list still tags dwarf lake iris pink). We didn't add the garden iris to the list, because then every garden iris would be called endangered.
+- **The AI doesn't know every rare plant well.** When we tested each card's own photo, the AI was unsure about kitten tails, dune thistle and prairie bush clover (under 20% sure), so it said "The AI isn't sure." If you know the plant, pick it on the **🌸 Endangered plants** page instead.
 - **County splits:** the app doesn't know the county, so it says "depending on the county."
