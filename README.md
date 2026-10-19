@@ -1,4 +1,4 @@
-# Wisconsin Plant Reporter
+# Protect Our WI Parks
 
 A phone-friendly web app for a FIRST LEGO League Innovation Project. The front page says **"Watch for these plants in Wisconsin!"** and has three big buttons:
 - **🌿 Invasive plants:** our team's 16 invasive plants (some are groups of look-alike plants), with photos and tips on how to spot them. Spot one? Report it.
@@ -21,11 +21,13 @@ The report screen shows the plant and the exact spot, with a **Copy details** bu
 
 | What | Address |
 |---|---|
-| The app (GitHub Pages) | https://wi-invasive-plants.github.io |
-| The code (GitHub) | https://github.com/wi-invasive-plants/wi-invasive-plants.github.io |
+| The app (GitHub Pages) | https://protect-our-wi-parks.github.io |
+| The code (GitHub) | https://github.com/protect-our-wi-parks/protect-our-wi-parks.github.io |
 | The plant helper (Cloudflare) | https://plant-helper.wi-invasive-plants.workers.dev |
 
-The Pl@ntNet key is stored **only** in Cloudflare, as the `PLANTNET_KEY` secret of the `plant-helper` worker. `ALLOWED_SITES` is `https://wi-invasive-plants.github.io,http://localhost:8000`.
+The plant helper's address still says `wi-invasive-plants`: that's the name of our Cloudflare account, which is separate from GitHub. It works fine, so we kept it. (The app used to be at `wi-invasive-plants.github.io`; that old address no longer works.)
+
+The Pl@ntNet key is stored **only** in Cloudflare, as the `PLANTNET_KEY` secret of the `plant-helper` worker. `ALLOWED_SITES` is `https://protect-our-wi-parks.github.io,http://localhost:8000`.
 
 ## Using the app
 
@@ -50,10 +52,10 @@ Team members can change the app from **any computer or Chromebook**, right on th
 **Before you start (once):**
 1. Get a GitHub account. ⚠️ GitHub accounts are for people **13 and older**. Pick a username **without your real name**, because it shows publicly next to every change.
 2. In GitHub, go to **Settings → Emails** and turn on **Keep my email addresses private**.
-3. Ask an owner of the `wi-invasive-plants` organization to give you **Write** access to the repository.
+3. Ask an owner of the `protect-our-wi-parks` organization to give you **Write** access to the repository.
 
 **Change one file:**
-1. Open https://github.com/wi-invasive-plants/wi-invasive-plants.github.io and click the file (for example `invasive-plants.json`).
+1. Open https://github.com/protect-our-wi-parks/protect-our-wi-parks.github.io and click the file (for example `invasive-plants.json`).
 2. Click the ✏️ **pencil**, make your change, then click **Commit changes…**.
 3. Write a short message that says what you changed (example: "Add cypress spurge"), then click **Commit changes**.
 
@@ -65,7 +67,7 @@ Team members can change the app from **any computer or Chromebook**, right on th
 
 **Check your change:**
 - The **robot checker** runs on every change. Open the **Actions** tab: ✅ means all good. ❌ means something is broken. Click it to see the problem in plain words, like "Garlic mustard: category must be one of…" or "This file is broken (often a missing comma) … line 8 column 7".
-- After about 1–2 minutes, reload https://wi-invasive-plants.github.io on your phone and try it.
+- After about 1–2 minutes, reload https://protect-our-wi-parks.github.io on your phone and try it.
 
 **Undo a mistake:** every change is saved.
 1. Open the file and click **History**.
@@ -107,7 +109,7 @@ Phone camera and GPS only work on secure `https://` pages. A laptop on Wi-Fi ser
 3. In Terminal, in this folder (replace `USERNAME` and `REPO`):
    ```
    git add .
-   git commit -m "Wisconsin Plant Reporter"
+   git commit -m "Protect Our WI Parks"
    git remote add origin https://github.com/USERNAME/REPO.git
    git push -u origin main
    ```
@@ -214,7 +216,7 @@ The other plants in `endangered-plants.json` have no card, but the AI still reco
 1. **Take a screenshot of your photo and upload the screenshot.** A phone photo usually has the exact spot where it was taken hidden inside it (that could be someone's home). A screenshot doesn't, and it's always a `.png` file that every browser can show. (iPhone photos are often `.heic`, which many browsers can't show. The robot checker only accepts `.jpg`, `.jpeg` or `.png`.)
 2. Only photos taken in a public place, never at a home or school, and with no people in them. For an endangered plant, never write down where you saw it (not in the file name, the credit, or a commit message): those spots are kept secret.
 3. Keep it under 1 MB. Give it a simple name with no spaces, like `my-buckthorn.png`.
-4. Set `photoCredit` to `"Photo: our team"` and `photoCreditUrl` to `"https://github.com/wi-invasive-plants/wi-invasive-plants.github.io"`.
+4. Set `photoCredit` to `"Photo: our team"` and `photoCreditUrl` to `"https://github.com/protect-our-wi-parks/protect-our-wi-parks.github.io"`.
 
 **Without internet:** once the app has opened, the plant pages and the "I found this" path keep working with no internet. Only the map pictures and the plant AI need internet.
 
