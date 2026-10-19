@@ -1,4 +1,4 @@
-# FLL Wisconsin Plant Reporter (invasive + endangered plants)
+# FLL Protect Our WI Parks (invasive + endangered plants)
 
 ## Who this is for
 A FIRST LEGO League team (kids ages 9–14) building their Innovation Project. The kids must be able to explain every file to judges. Simplicity beats cleverness.
@@ -25,7 +25,7 @@ A FIRST LEGO League team (kids ages 9–14) building their Innovation Project. T
 
 ## Running it
 - Local: `python3 -m http.server` then open http://localhost:8000
-- Live: https://wi-invasive-plants.github.io (GitHub Pages; HTTPS is required for camera and GPS). Pushing to `main` updates it.
+- Live: https://protect-our-wi-parks.github.io (GitHub Pages; HTTPS is required for camera and GPS). Pushing to `main` updates it.
 - Plant helper: `plant-helper.js` runs on Cloudflare Workers at https://plant-helper.wi-invasive-plants.workers.dev. After changing it, redeploy it in Cloudflare.
 
 ## Living docs
