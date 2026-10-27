@@ -205,7 +205,7 @@ main > section h2 {
   padding: 0;
   overflow: hidden;
   background: white;
-  border: 0px solid #e3dfd2;
+  border: 2px solid #e3dfd2;
   border-radius: 12px;
   color: var(--text);
   font-size: 15px;
