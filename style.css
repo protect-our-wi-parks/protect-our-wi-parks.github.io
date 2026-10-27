@@ -206,11 +206,11 @@ main > section h2 {
   overflow: hidden;
   background: white;
   border: 0px solid #e3dfd2;
-  border-radius: 12px;
+  border-radius: 0px;
   color: var(--text);
   font-size: 15px;
   font-weight: bold;
-  line-height: 1.2;
+  line-height: 0;
 }
 
 .plant-tile img {
