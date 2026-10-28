@@ -228,7 +228,6 @@ main > section h2 {
 .plant-tile.prohibited {
   border-color: transparent;
   border-width: 0;
-  box-shadow: none;;
 }
 
 /* The little ⚠️ in the corner of plants that are dangerous to touch. */
